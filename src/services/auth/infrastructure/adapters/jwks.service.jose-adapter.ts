@@ -1,19 +1,27 @@
 import { Injectable } from '@nestjs/common';
-import { exportJWK, generateKeyPair, JWK, KeyLike } from 'jose';
+import {
+  exportJWK,
+  exportPKCS8,
+  exportSPKI,
+  generateKeyPair,
+  JWK,
+  KeyLike,
+} from 'jose';
+import { GenerateKeyPairResult } from 'jose/dist/types/key/generate_key_pair';
 import { MakeRequired } from '../../../../shared/core/make-required.util';
 import {
   JwKey,
   Jwks,
   JwksServicePort,
+  KeyPrivateInfo,
 } from '../../domain/ports/jwks.service.port';
+
+type CreateJwKeyOptions = { kid: string; alg: string; use: string };
 
 @Injectable()
 export class JwksServiceJoseAdapter implements JwksServicePort {
-  public readonly keys: {
-    kid: string;
-    publicKey: string;
-    privateKey: string;
-  }[] = [];
+  public readonly keyPrivateInfos: KeyPrivateInfo[] = [];
+
   private jwks: Jwks;
   private readonly jwKeys: JwKey[] = [];
 
@@ -24,7 +32,7 @@ export class JwksServiceJoseAdapter implements JwksServicePort {
       return this.jwks;
     }
 
-    const jwKey = await this.buildOneKey();
+    const jwKey = await this.buildOneJwKey();
     this.jwKeys.push(jwKey);
 
     const jwks = {
@@ -35,29 +43,45 @@ export class JwksServiceJoseAdapter implements JwksServicePort {
     return jwks;
   }
 
-  private async buildOneKey() {
+  private async buildOneJwKey() {
     const options = {
-      kid: `${this.keys.length + 1}`,
+      kid: `${this.keyPrivateInfos.length + 1}`,
       alg: 'RS256',
       use: 'sig',
-    };
+    } as const;
+    const keyPairResult = await generateKeyPair(options.alg);
+    const keyPrivateInfo = await this.buildKeyPrivateInfos(
+      keyPairResult,
+      options,
+    );
+    this.keyPrivateInfos.push(keyPrivateInfo);
+    return this.exportJWK(keyPairResult.publicKey, options);
+  }
 
-    const { publicKey, privateKey } = await generateKeyPair(options.alg);
-    const key = {
-      kid: options.kid,
-      publicKey: publicKey.type,
-      privateKey: privateKey.type,
-    };
+  private async buildKeyPrivateInfos<
+    TCreateJwKeyOptions extends CreateJwKeyOptions,
+  >(
+    { privateKey, publicKey }: GenerateKeyPairResult,
+    { kid, alg }: TCreateJwKeyOptions,
+  ) {
+    const publicKeyPEM = await exportSPKI(publicKey);
+    const privateKeyPEM = await exportPKCS8(privateKey);
+    const keyPrivateInfo = {
+      kid,
+      alg,
+      publicKey: publicKeyPEM,
+      privateKey: privateKeyPEM,
+    } as {
+      publicKey: string;
+      privateKey: string;
+    } & TCreateJwKeyOptions;
 
-    console.log(publicKey);
-    this.keys.push(key);
-
-    return this.exportJWK(publicKey, options);
+    return keyPrivateInfo;
   }
 
   private async exportJWK(
     publicKey: KeyLike,
-    { kid, alg, use }: { alg: string; kid: string; use: string },
+    { kid, alg, use }: CreateJwKeyOptions,
   ) {
     const jwKey = await exportJWK(publicKey);
     jwKey.kid = kid;
