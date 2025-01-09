@@ -1,12 +1,7 @@
-import {
-  Table,
-  Column,
-  Model,
-  DataType,
-} from 'sequelize-typescript';
+import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
-@Table({ tableName: 'projects' })
-export class Project extends Model {
+@Table({ tableName: 'users' })
+export class User extends Model {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
@@ -16,13 +11,14 @@ export class Project extends Model {
 
   @Column({
     type: DataType.STRING,
+    unique: true,
     allowNull: false,
   })
-  name: string;
+  email: string;
 
   @Column({
     type: DataType.STRING,
     allowNull: false,
   })
-  description: string;
+  password: string;
 }

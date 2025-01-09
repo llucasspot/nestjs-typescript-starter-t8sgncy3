@@ -3,7 +3,9 @@ import { DatabaseServiceInterface } from '../../domain/databse.service.interface
 import { Injectable, OnModuleInit } from '@nestjs/common';
 
 @Injectable()
-export class SequelizeDatabaseService implements DatabaseServiceInterface, OnModuleInit {
+export class SequelizeDatabaseService
+  implements DatabaseServiceInterface, OnModuleInit
+{
   public readonly sequelize: Sequelize;
 
   constructor() {

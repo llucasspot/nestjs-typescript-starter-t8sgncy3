@@ -6,29 +6,25 @@ import {
   Param,
   Post,
   Put,
-  UseGuards,
-  Request,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../../auth/infrastructure/guards/jwt-auth.guard';
-import { ProjectService } from '../../application/services/project.service';
 import {
   CreateProjectDto,
   UpdateProjectDto,
 } from '../../application/dtos/project.dto';
+import { ProjectService } from '../../application/services/project.service';
 
 @Controller('projects')
-@UseGuards(JwtAuthGuard)
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
   @Post()
-  create(@Body() dto: CreateProjectDto, @Request() req) {
-    return this.projectService.create(dto, req.user.id);
+  create(@Body() dto: CreateProjectDto) {
+    return this.projectService.create(dto);
   }
 
   @Get()
-  findAll(@Request() req) {
-    return this.projectService.findByUserId(req.user.id);
+  findAll() {
+    return this.projectService.findAll();
   }
 
   @Get(':id')

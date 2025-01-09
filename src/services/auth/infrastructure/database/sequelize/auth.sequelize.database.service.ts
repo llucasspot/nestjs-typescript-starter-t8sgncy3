@@ -1,4 +1,4 @@
-import { SequelizeDatabaseService } from '../../../../shared/database/infrastructure/sequelize/sequelize.database.service';
+import { SequelizeDatabaseService } from '../../../../../shared/database/infrastructure/sequelize/sequelize.database.service';
 import { User } from './models/user.model';
 import { Injectable } from '@nestjs/common';
 

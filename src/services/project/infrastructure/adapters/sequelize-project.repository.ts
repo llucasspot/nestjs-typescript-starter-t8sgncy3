@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { ProjectRepositoryPort } from '../../domain/ports/project-repository.port';
 import { Project as ProjectEntity } from '../../domain/entities/project.entity';
+import { ProjectRepositoryPort } from '../../domain/ports/project-repository.port';
 import { Project } from '../database/sequelize/models/project.model';
-import { SequelizeDatabaseService } from 'src/shared/database/infrastructure/sequelize/sequelize.database.service';
 
 @Injectable()
 export class SequelizeProjectRepository implements ProjectRepositoryPort {
-
   async create(projectEntity: ProjectEntity): Promise<ProjectEntity> {
     const project = await Project.create({
       name: projectEntity.name,
@@ -21,8 +19,8 @@ export class SequelizeProjectRepository implements ProjectRepositoryPort {
     return project ? this.mapToEntity(project) : null;
   }
 
-  async findByUserId(userId: string): Promise<ProjectEntity[]> {
-    const projects = await Project.findAll({ where: { userId } });
+  async findAll(): Promise<ProjectEntity[]> {
+    const projects = await Project.findAll();
     return projects.map(this.mapToEntity);
   }
 

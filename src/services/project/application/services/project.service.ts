@@ -7,7 +7,7 @@ import { CreateProjectDto, UpdateProjectDto } from '../dtos/project.dto';
 export class ProjectService {
   constructor(private readonly projectRepository: ProjectRepositoryPort) {}
 
-  async create(dto: CreateProjectDto, userId: string): Promise<Project> {
+  async create(dto: CreateProjectDto): Promise<Project> {
     const project = Project.create(dto.name, dto.description);
     return this.projectRepository.create(project);
   }
@@ -20,8 +20,8 @@ export class ProjectService {
     return project;
   }
 
-  async findByUserId(userId: string): Promise<Project[]> {
-    return this.projectRepository.findByUserId(userId);
+  async findAll(): Promise<Project[]> {
+    return this.projectRepository.findAll();
   }
 
   async update(id: string, dto: UpdateProjectDto): Promise<Project> {

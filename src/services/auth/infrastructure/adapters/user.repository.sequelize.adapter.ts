@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { UserRepositoryPort } from '../../domain/ports/user-repository.port';
 import { User as UserEntity } from '../../domain/entities/user.entity';
-import { Sequelize } from 'sequelize-typescript';
+import { UserRepositoryPort } from '../../domain/ports/user-repository.port';
 import { User } from '../database/sequelize/models/user.model';
 
 @Injectable()
 export class SequelizeUserRepository implements UserRepositoryPort {
-
   async findByEmail(email: string): Promise<UserEntity | null> {
     const user = await User.findOne({ where: { email } });
     if (!user) return null;
