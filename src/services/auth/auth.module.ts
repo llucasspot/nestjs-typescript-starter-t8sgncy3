@@ -9,10 +9,13 @@ import { SequelizeUserRepository } from './infrastructure/adapters/user.reposito
 import { JwtStrategy } from './infrastructure/strategies/jwt.strategy';
 import { UserRepositoryPort } from './domain/ports/user-repository.port';
 import { HashingPort } from './domain/ports/hashing.port';
+import { JwksServicePort } from './domain/ports/jwks.service.port';
+import { JwksController } from './infrastructure/controllers/jwks.controller';
+import { JwksServiceJoseAdapter } from './infrastructure/adapters/jwks.service.jose-adapter';
 import { DatabaseModule } from './infrastructure/database/database.module';
 
 @Module({
-  controllers: [AuthController],
+  controllers: [AuthController, JwksController],
   imports: [
     DatabaseModule,
     PassportModule,
@@ -27,6 +30,10 @@ import { DatabaseModule } from './infrastructure/database/database.module';
   providers: [
     AuthService,
     JwtStrategy,
+    {
+      provide: JwksServicePort,
+      useClass: JwksServiceJoseAdapter,
+    },
     {
       provide: UserRepositoryPort,
       useClass: SequelizeUserRepository,
