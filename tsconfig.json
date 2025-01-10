@@ -12,6 +12,13 @@
     "baseUrl": "./",
     "incremental": true,
     "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "strictBindCallApply": true,
+    "noFallthroughCasesInSwitch": true,
+    "esModuleInterop": true, // import * as
+    "noUncheckedIndexedAccess": true, // array[0] optionnel,
   }
 }

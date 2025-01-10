@@ -7,9 +7,8 @@ import { CreateProjectDto, UpdateProjectDto } from '../dtos/project.dto';
 export class ProjectService {
   constructor(private readonly projectRepository: ProjectRepositoryPort) {}
 
-  async create(dto: CreateProjectDto): Promise<Project> {
-    const project = Project.create(dto.name, dto.description);
-    return this.projectRepository.create(project);
+  async create(body: CreateProjectDto): Promise<Project> {
+    return this.projectRepository.create(body);
   }
 
   async findById(id: string): Promise<Project> {

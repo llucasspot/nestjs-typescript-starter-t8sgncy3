@@ -1,48 +1,34 @@
 import { InternalServerErrorException, Module } from '@nestjs/common';
 import { JwtModule, JwtModuleOptions, JwtSecretRequestType } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
 import { ConfigPort } from '../../shared/config/domain/ports/config.port';
-import { ProcessEnvConfigAdapter } from '../../shared/config/infrastructure/process-env-config.adapter';
 import { AuthService } from './application/services/auth.service';
-import { HashingPort } from './domain/ports/hashing.port';
+import { AuthhModule } from './authh.module';
 import { JwksServicePort } from './domain/ports/jwks.service.port';
-import { KidGetterPort } from './domain/ports/kid.getter.port';
-import { UserRepositoryPort } from './domain/ports/user-repository.port';
-import { JwksServiceJoseAdapter } from './infrastructure/adapters/jwks.service.jose-adapter';
-import { KidGetterJoseAdapter } from './infrastructure/adapters/kid.getter.jose-adapter';
-import { SequelizeUserRepository } from './infrastructure/adapters/user.repository.sequelize.adapter';
+import { PublicKeyGetterPort } from './domain/ports/public-key.getter.port';
+import { SignKeyGetterPort } from './domain/ports/sign-key.getter.port';
 import { AuthController } from './infrastructure/controllers/auth.controller';
 import { JwksController } from './infrastructure/controllers/jwks.controller';
-import { DatabaseModule } from './infrastructure/database/database.module';
-import { JwtStrategy } from './infrastructure/strategies/jwt.strategy';
 
 @Module({
   controllers: [AuthController, JwksController],
   imports: [
-    DatabaseModule,
-    PassportModule,
+    AuthhModule,
     JwtModule.registerAsync({
-      inject: [ConfigPort, JwksServicePort, KidGetterPort],
-      extraProviders: [
-        {
-          provide: JwksServicePort,
-          useClass: JwksServiceJoseAdapter,
-        },
-        {
-          provide: KidGetterPort,
-          useClass: KidGetterJoseAdapter,
-        },
+      imports: [AuthhModule],
+      inject: [
+        ConfigPort,
+        JwksServicePort,
+        PublicKeyGetterPort,
+        SignKeyGetterPort,
       ],
       useFactory: async (
         configPort: ConfigPort,
         jwksServicePort: JwksServicePort,
-        kidGetterPort: KidGetterPort,
+        publicKeyGetterPort: PublicKeyGetterPort,
+        signKeyGetterPort: SignKeyGetterPort,
       ) => {
         await jwksServicePort.getJwks();
-        const signKeyPrivateInfo = jwksServicePort.keyPrivateInfos[0];
-        if (!signKeyPrivateInfo) {
-          throw new InternalServerErrorException('no key');
-        }
+        const signKeyPrivateInfo = signKeyGetterPort.get();
 
         const secretOrKeyProvider: JwtModuleOptions['secretOrKeyProvider'] =
           async (requestType, tokenOrPayload) => {
@@ -51,9 +37,7 @@ import { JwtStrategy } from './infrastructure/strategies/jwt.strategy';
             }
             if (requestType === JwtSecretRequestType.VERIFY) {
               const token = tokenOrPayload as string;
-              const kid = kidGetterPort.get({ token });
-              const keyPrivateInfo = jwksServicePort.keyPrivateInfos[kid];
-              return keyPrivateInfo.publicKey;
+              return publicKeyGetterPort.get({ token });
             }
             throw new InternalServerErrorException('impossible request type');
           };
@@ -78,44 +62,7 @@ import { JwtStrategy } from './infrastructure/strategies/jwt.strategy';
       },
     }),
   ],
-  providers: [
-    AuthService,
-    JwtStrategy,
-    {
-      provide: JwksServicePort,
-      useClass: JwksServiceJoseAdapter,
-    },
-    {
-      provide: KidGetterPort,
-      useClass: KidGetterJoseAdapter,
-    },
-    {
-      provide: UserRepositoryPort,
-      useClass: SequelizeUserRepository,
-    },
-    {
-      provide: ConfigPort,
-      useClass: ProcessEnvConfigAdapter,
-    },
-    {
-      provide: HashingPort,
-      useFactory: async (): Promise<HashingPort> => {
-        const inWebContainer = true;
-        let hashingService: HashingPort;
-        if (inWebContainer) {
-          const { BcryptJsHashingAdapter } = await import(
-            './infrastructure/adapters/bcryptjs-hashing.adapter'
-          );
-          hashingService = new BcryptJsHashingAdapter();
-        } else {
-          const { BcryptHashingAdapter } = await import(
-            './infrastructure/adapters/bcrypt-hashing.adapter'
-          );
-          hashingService = new BcryptHashingAdapter();
-        }
-        return hashingService;
-      },
-    },
-  ],
+  providers: [AuthService],
+  exports: [AuthService],
 })
 export class AuthModule {}

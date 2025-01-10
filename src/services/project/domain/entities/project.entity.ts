@@ -6,8 +6,4 @@ export class Project {
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
   ) {}
-
-  static create(name: string, description: string): Project {
-    return new Project(undefined, name, description, undefined, undefined);
-  }
 }

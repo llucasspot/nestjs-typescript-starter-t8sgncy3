@@ -1,14 +1,15 @@
 import { Injectable } from '@nestjs/common';
+import { CreateProjectDto } from '../../application/dtos/project.dto';
 import { Project as ProjectEntity } from '../../domain/entities/project.entity';
 import { ProjectRepositoryPort } from '../../domain/ports/project-repository.port';
 import { Project } from '../database/sequelize/models/project.model';
 
 @Injectable()
 export class SequelizeProjectRepository implements ProjectRepositoryPort {
-  async create(projectEntity: ProjectEntity): Promise<ProjectEntity> {
+  async create(body: CreateProjectDto): Promise<ProjectEntity> {
     const project = await Project.create({
-      name: projectEntity.name,
-      description: projectEntity.description,
+      name: body.name,
+      description: body.description,
     });
 
     return this.mapToEntity(project);

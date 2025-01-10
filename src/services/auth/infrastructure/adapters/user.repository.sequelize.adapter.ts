@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { SignUpDto } from '../../application/dtos/auth.dto';
 import { User as UserEntity } from '../../domain/entities/user.entity';
 import { UserRepositoryPort } from '../../domain/ports/user-repository.port';
 import { User } from '../database/sequelize/models/user.model';
@@ -18,10 +19,10 @@ export class SequelizeUserRepository implements UserRepositoryPort {
     );
   }
 
-  async create(userEntity: UserEntity): Promise<UserEntity> {
+  async create(body: SignUpDto): Promise<UserEntity> {
     const user = await User.create({
-      email: userEntity.email,
-      password: userEntity.password,
+      email: body.email,
+      password: body.password,
     });
 
     return new UserEntity(

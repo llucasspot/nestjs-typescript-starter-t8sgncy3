@@ -1,7 +1,8 @@
+import { CreateProjectDto } from '../../application/dtos/project.dto';
 import { Project } from '../entities/project.entity';
 
 export abstract class ProjectRepositoryPort {
-  abstract create(project: Project): Promise<Project>;
+  abstract create(body: CreateProjectDto): Promise<Project>;
   abstract findById(id: string): Promise<Project | null>;
   abstract findAll(): Promise<Project[]>;
   abstract update(id: string, project: Partial<Project>): Promise<Project>;

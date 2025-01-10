@@ -1,9 +1,10 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserRepositoryPort } from '../../domain/ports/user-repository.port';
-import { HashingPort } from '../../domain/ports/hashing.port';
 import { User } from '../../domain/entities/user.entity';
-import { SignUpDto, SignInDto } from '../dtos/auth.dto';
+import { HashingPort } from '../../domain/ports/hashing.port';
+import { UserRepositoryPort } from '../../domain/ports/user-repository.port';
+import { SignInDto, SignUpDto } from '../dtos/auth.dto';
+import { AuthResponse } from '../dtos/auth.response';
 
 @Injectable()
 export class AuthService {
@@ -13,22 +14,22 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async signUp(dto: SignUpDto): Promise<{ token: string }> {
-    const existingUser = await this.userRepository.findByEmail(dto.email);
+  async signUp(body: SignUpDto): Promise<AuthResponse> {
+    const existingUser = await this.userRepository.findByEmail(body.email);
     if (existingUser) {
       throw new UnauthorizedException('Email already exists');
     }
 
-    const hashedPassword = await this.hashingService.hash(dto.password);
-    const user = await this.userRepository.create(
-      User.create(dto.email, hashedPassword),
-    );
+    const hashedPassword = await this.hashingService.hash(body.password);
+    const user = await this.userRepository.create({
+      email: body.email,
+      password: hashedPassword,
+    });
 
-    const token = this.jwtService.sign({ sub: user.id, email: user.email });
-    return { token };
+    return this.buildAuthResponse(user);
   }
 
-  async signIn(dto: SignInDto): Promise<{ token: string }> {
+  async signIn(dto: SignInDto): Promise<AuthResponse> {
     const user = await this.userRepository.findByEmail(dto.email);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
@@ -42,7 +43,14 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    const token = this.jwtService.sign({ sub: user.id, email: user.email });
-    return { token };
+    return this.buildAuthResponse(user);
+  }
+
+  private async buildAuthResponse(user: User) {
+    const accessToken = await this.jwtService.signAsync({
+      sub: user.id,
+      email: user.email,
+    });
+    return { accessToken };
   }
 }

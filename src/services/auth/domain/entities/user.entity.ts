@@ -6,8 +6,4 @@ export class User {
     public readonly createdAt: Date,
     public readonly updatedAt: Date,
   ) {}
-
-  static create(email: string, hashedPassword: string): User {
-    return new User(undefined, email, hashedPassword, undefined, undefined);
-  }
 }
