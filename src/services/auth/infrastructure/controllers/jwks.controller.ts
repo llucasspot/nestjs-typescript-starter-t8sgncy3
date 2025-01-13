@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { JwksServicePort } from '../../domain/ports/jwks.service.port';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwksServicePort } from '../../../../shared/jwks/domain/jwks.service.port';
 
 @ApiTags('auth')
 @Controller('.well-known')

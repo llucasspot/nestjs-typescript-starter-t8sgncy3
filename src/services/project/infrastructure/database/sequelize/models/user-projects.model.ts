@@ -6,7 +6,7 @@ import {
   ForeignKey,
   BelongsTo,
 } from 'sequelize-typescript';
-import { User } from '../../../../../auth/infrastructure/database/sequelize/models/user.model';
+import { User } from '../../../../../auth/modules/local/infrastructure/database/sequelize/models/user.model';
 import { Project } from './project.model';
 
 @Table({ tableName: 'user_projects' })

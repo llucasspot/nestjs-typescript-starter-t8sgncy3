@@ -1,17 +1,11 @@
-import { Module, Global } from '@nestjs/common';
-import { ConfigPort } from './config/domain/ports/config.port';
-import { ProcessEnvConfigAdapter } from './config/infrastructure/process-env-config.adapter';
+import { Global, Module } from '@nestjs/common';
+import { ConfigModule } from './config/infrastructure/config.module';
 import { SesuelizeDatabaseModule } from './database/infrastructure/sequelize/sequelize.database.module';
+import { JwksModuleLocal } from './jwks/modules/local/infrastructure/jwks.module.local';
 
 @Global()
 @Module({
-  imports: [SesuelizeDatabaseModule],
-  providers: [
-    {
-      provide: ConfigPort,
-      useClass: ProcessEnvConfigAdapter,
-    },
-  ],
-  exports: [SesuelizeDatabaseModule, ConfigPort],
+  imports: [ConfigModule, SesuelizeDatabaseModule, JwksModuleLocal],
+  exports: [ConfigModule, SesuelizeDatabaseModule, JwksModuleLocal],
 })
 export class SharedModule {}

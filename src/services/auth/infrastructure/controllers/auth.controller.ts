@@ -1,12 +1,17 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { AuthService } from '../../application/services/auth.service';
-import { SignUpDto, SignInDto } from '../../application/dtos/auth.dto';
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth } from '../../../../shared/guard/decorators/api-bearer-auth.decorator';
+import {
+  User,
+  UserI,
+} from '../../../../shared/guard/decorators/user.decorator';
+import { SignInDto, SignUpDto } from '../../domain/dtos/auth.dto';
+import { AuthServicePort } from '../../domain/auth.service.port';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthServicePort) {}
 
   @ApiOperation({ summary: 'Register a new user' })
   @ApiResponse({ status: 201, description: 'User successfully registered' })
@@ -22,5 +27,11 @@ export class AuthController {
   @Post('signin')
   signIn(@Body() dto: SignInDto) {
     return this.authService.signIn(dto);
+  }
+
+  @ApiBearerAuth()
+  @Get('lala')
+  lala(@User() user: UserI) {
+    return user;
   }
 }

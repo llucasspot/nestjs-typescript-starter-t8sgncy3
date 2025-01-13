@@ -4,9 +4,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ProjectSequelizeDatabaseService {
-  constructor(
-    private readonly sequelizeDatabaseService: SequelizeDatabaseService,
-  ) {
+  constructor(sequelizeDatabaseService: SequelizeDatabaseService) {
     sequelizeDatabaseService.sequelize.addModels([Project]);
   }
 }

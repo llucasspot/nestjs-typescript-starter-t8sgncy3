@@ -1,8 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { Logger } from '@nestjs/common';
+import { ClassSerializerInterceptor, Logger } from '@nestjs/common';
 import { SwaggerConfigPort } from './app/domain/ports/swagger-config.port';
 import { AppConfigPort } from './app/domain/ports/app-config.port';
+import { AxiosErrorInterceptor } from './app/infrastructure/interceptors/axios.error.interceptor';
+import { ErrorInterceptor } from './app/infrastructure/interceptors/error.interceptor';
 import { MainModule } from './main.module';
 
 async function bootstrap() {
@@ -13,6 +15,16 @@ async function bootstrap() {
 
   app.setGlobalPrefix(appConfig.globalPrefix);
 
+  // interceptors
+
+  app.useGlobalInterceptors(
+    app.get(AxiosErrorInterceptor),
+    app.get(ClassSerializerInterceptor),
+    app.get(ErrorInterceptor),
+  );
+
+  // swagger
+
   const config = new DocumentBuilder()
     .setTitle(swaggerConfig.title)
     .setDescription(swaggerConfig.description)
@@ -22,6 +34,8 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup(swaggerConfig.path, app, document);
+
+  // run
 
   await app.listen(appConfig.port);
 
