@@ -12,10 +12,10 @@ import { CreateJwkUseCase } from '../application/create-jwk.use-case';
       useFactory: async (): Promise<JwkCreatorPort> => {
         return inWebContainer<JwkCreatorPort>({
           loadIfTrue: async () => {
-            const { JwkCreatorForgeAdapter } = await import(
-              './adapters/jwk.creator.node-forge-adapter'
+            const { JwkCreatorCryptoAdapter } = await import(
+              './adapters/jwk.creator.crypto-adapter'
             );
-            return new JwkCreatorForgeAdapter();
+            return new JwkCreatorCryptoAdapter();
           },
           loadIfFalse: async () => {
             const { JwkCreatorJoseAdapter } = await import(
