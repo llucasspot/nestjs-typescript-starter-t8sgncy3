@@ -1,4 +1,4 @@
-import { StringUrl } from '../../../services/auth/domain/jwt-sign-config.getter.port';
+import { StringUrl } from '../../../services/auth/modules/local/domain/jwt-sign-config.getter.port';
 import { Getter } from '../../core/getter';
 
 export type AuthMicroserviceConfig = {

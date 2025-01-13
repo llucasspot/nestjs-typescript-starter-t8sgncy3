@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { StringUrl } from '../../../../services/auth/domain/jwt-sign-config.getter.port';
+import { StringUrl } from '../../../../services/auth/modules/local/domain/jwt-sign-config.getter.port';
 import { AuthMicroserviceConfigGetterPort } from '../../domain/auth-microservice-config.getter.port';
 
 @Injectable()

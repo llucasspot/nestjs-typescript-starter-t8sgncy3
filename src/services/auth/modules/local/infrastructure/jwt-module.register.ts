@@ -1,33 +1,35 @@
 import { InternalServerErrorException } from '@nestjs/common';
 import { JwtModule, JwtModuleOptions, JwtSecretRequestType } from '@nestjs/jwt';
-import { JwksServicePort } from '../../../../../shared/jwks/domain/jwks.service.port';
+import { JwtConfigModule } from '../../../../../shared/jwt-guard/infrastructure/jwt.config.module';
 import { SignJwkGetterPort } from '../../../../../shared/private-key/domain/sign-jwk.getter.port';
 import { PrivateKeyModule } from '../../../../../shared/private-key/infrastructure/private-key.module';
 import { PublicKeyGetter } from '../../../../../shared/public-key/domain/public-key.getter';
 import { PublicKeyModule } from '../../../../../shared/public-key/infrastructure/public-key.module';
-import { AuthConfModule } from '../../../infrastructure/auth-conf.module';
-import { JwtSignConfigGetterPort } from '../../../domain/jwt-sign-config.getter.port';
-import { JwtVerifyConfigGetterPort } from '../../../domain/jwt-verify-config.getter.port';
+import { JwtSignConfigGetterPort } from '../domain/jwt-sign-config.getter.port';
+import { JwtVerifyConfigGetterPort } from '../../../../../shared/jwt-guard/domain/jwt-verify-config.getter.port';
+import { AuthConfModule } from './auth-conf.module';
 
 export const JwtModuleRegister = () =>
   JwtModule.registerAsync({
-    imports: [AuthConfModule, PublicKeyModule, PrivateKeyModule],
+    imports: [
+      AuthConfModule,
+      JwtConfigModule,
+      PublicKeyModule,
+      PrivateKeyModule,
+    ],
     inject: [
       JwtSignConfigGetterPort,
       JwtVerifyConfigGetterPort,
-      JwksServicePort,
       PublicKeyGetter,
       SignJwkGetterPort,
     ],
     useFactory: async (
       jwtSignConfigGetter: JwtSignConfigGetterPort,
       jwtVerifyConfigGetter: JwtVerifyConfigGetterPort,
-      jwksService: JwksServicePort,
       publicKeyGetter: PublicKeyGetter,
       signKeyGetter: SignJwkGetterPort,
     ) => {
-      await jwksService.getJwks();
-      const signKeyPrivateInfo = signKeyGetter.get();
+      const signKeyPrivateInfo = await signKeyGetter.get();
 
       const secretOrKeyProvider: JwtModuleOptions['secretOrKeyProvider'] =
         async (requestType, tokenOrPayload) => {

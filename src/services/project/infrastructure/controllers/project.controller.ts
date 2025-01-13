@@ -8,24 +8,24 @@ import {
   Put,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ApiBearerAuth } from '../../../../shared/guard/decorators/api-bearer-auth.decorator';
+import { ApiBearerAuth } from '../../../../shared/jwt-guard/decorators/api-bearer-auth.decorator';
 import {
   CreateProjectDto,
   UpdateProjectDto,
-} from '../../application/dtos/project.dto';
-import { ProjectService } from '../../application/services/project.service';
+} from '../../domain/dtos/project.dto';
+import { ProjectServicePort } from '../../domain/project.service.port';
 
 @ApiBearerAuth()
 @ApiTags('projects')
 @Controller('projects')
 export class ProjectController {
-  constructor(private readonly projectService: ProjectService) {}
+  constructor(private readonly projectService: ProjectServicePort) {}
 
   @ApiOperation({ summary: 'Create a new project' })
   @ApiResponse({ status: 201, description: 'Project successfully created' })
   @Post()
-  create(@Body() dto: CreateProjectDto) {
-    return this.projectService.create(dto);
+  createOne(@Body() dto: CreateProjectDto) {
+    return this.projectService.createOne(dto);
   }
 
   @ApiOperation({ summary: 'Get all projects' })
@@ -39,23 +39,23 @@ export class ProjectController {
   @ApiResponse({ status: 200, description: 'Return the project' })
   @ApiResponse({ status: 404, description: 'Project not found' })
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.projectService.findById(id);
+  findOneById(@Param('id') id: string) {
+    return this.projectService.findOneById(id);
   }
 
   @ApiOperation({ summary: 'Update a project' })
   @ApiResponse({ status: 200, description: 'Project successfully updated' })
   @ApiResponse({ status: 404, description: 'Project not found' })
   @Put(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateProjectDto) {
-    return this.projectService.update(id, dto);
+  updateOne(@Param('id') id: string, @Body() dto: UpdateProjectDto) {
+    return this.projectService.updateOne(id, dto);
   }
 
   @ApiOperation({ summary: 'Delete a project' })
   @ApiResponse({ status: 200, description: 'Project successfully deleted' })
   @ApiResponse({ status: 404, description: 'Project not found' })
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.projectService.delete(id);
+  deleteOne(@Param('id') id: string) {
+    return this.projectService.deleteOne(id);
   }
 }

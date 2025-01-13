@@ -1,6 +1,6 @@
 import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { GuardModule } from '../shared/guard/guard.module';
+import { JwtGuardModule } from '../shared/jwt-guard/infrastructure/jwt.guard.module';
 import { SharedModule } from '../shared/shared.module';
 import { AppConfigPort } from './domain/ports/app-config.port';
 import { SwaggerConfigPort } from './domain/ports/swagger-config.port';
@@ -10,7 +10,7 @@ import { ErrorInterceptor } from './infrastructure/interceptors/error.intercepto
 import { SwaggerConfigProcessEnvAdapter } from './infrastructure/swagger-config.process-env-adapter';
 
 @Module({
-  imports: [GuardModule, SharedModule],
+  imports: [JwtGuardModule, SharedModule],
   providers: [
     {
       provide: AppConfigPort,

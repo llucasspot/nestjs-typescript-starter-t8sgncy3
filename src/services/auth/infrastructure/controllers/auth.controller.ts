@@ -1,10 +1,10 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ApiBearerAuth } from '../../../../shared/guard/decorators/api-bearer-auth.decorator';
+import { ApiBearerAuth } from '../../../../shared/jwt-guard/decorators/api-bearer-auth.decorator';
 import {
   User,
   UserI,
-} from '../../../../shared/guard/decorators/user.decorator';
+} from '../../../../shared/jwt-guard/decorators/user.decorator';
 import { SignInDto, SignUpDto } from '../../domain/dtos/auth.dto';
 import { AuthServicePort } from '../../domain/auth.service.port';
 

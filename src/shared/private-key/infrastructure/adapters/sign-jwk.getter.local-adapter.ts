@@ -6,11 +6,19 @@ import { SignJwkGetterPort } from '../../domain/sign-jwk.getter.port';
 export class SignJwkGetterLocalAdapter implements SignJwkGetterPort {
   constructor(private readonly createJwkUseCase: CreateJwkUseCase) {}
 
-  get() {
-    const signJwkPrivateInfo = this.createJwkUseCase.createdJwkPrivateInfos[0];
+  async get() {
+    let signJwkPrivateInfo = this.getSignJwkPrivateInfo();
+    if (!signJwkPrivateInfo) {
+      await this.createJwkUseCase.execute();
+      signJwkPrivateInfo = this.getSignJwkPrivateInfo();
+    }
     if (!signJwkPrivateInfo) {
       throw new InternalServerErrorException('no sign key found');
     }
     return signJwkPrivateInfo;
+  }
+
+  private getSignJwkPrivateInfo() {
+    return this.createJwkUseCase.createdJwkPrivateInfos[0];
   }
 }
