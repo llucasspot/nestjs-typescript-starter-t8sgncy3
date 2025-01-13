@@ -1,9 +1,6 @@
 import { Creator } from '../../../../core/creator';
 
 export type AvailableAlgorithm =
-  | 'HS256'
-  | 'HS384'
-  | 'HS512'
   | 'RS256'
   | 'RS384'
   | 'RS512'
@@ -12,8 +9,7 @@ export type AvailableAlgorithm =
   | 'ES512'
   | 'PS256'
   | 'PS384'
-  | 'PS512'
-  | 'none';
+  | 'PS512';
 
 export type Jwk = {
   kid: string;

@@ -14,11 +14,10 @@ import { PublicKeyGetter } from '../domain/public-key.getter';
       useFactory: async (): Promise<JwtHeaderExtractorPort> => {
         return inWebContainer<JwtHeaderExtractorPort>({
           loadIfTrue: async () => {
-            const { JwtHeaderExtractorJoseBrowserRuntimeAdapter } =
-              await import(
-                './adapters/jwt-header.extractor.jose-browser-runtime-adapter'
-              );
-            return new JwtHeaderExtractorJoseBrowserRuntimeAdapter();
+            const { JwtHeaderExtractorJsonwebtokenAdapter } = await import(
+              './adapters/jwt-header.extractor.jsonwebtoken-adapter'
+            );
+            return new JwtHeaderExtractorJsonwebtokenAdapter();
           },
           loadIfFalse: async () => {
             const { JwtHeaderExtractorJoseAdapter } = await import(
@@ -34,11 +33,10 @@ import { PublicKeyGetter } from '../domain/public-key.getter';
       useFactory: async (): Promise<PublicKeyFromJwksExtractorPort> => {
         return inWebContainer<PublicKeyFromJwksExtractorPort>({
           loadIfTrue: async () => {
-            const { PublicKeyFromJwksExtractorJoseBrowserRuntimeAdapter } =
-              await import(
-                './adapters/public-key-from-jwks.extractor.jose-browser-runtime-adapter'
-              );
-            return new PublicKeyFromJwksExtractorJoseBrowserRuntimeAdapter();
+            const { PublicKeyFromJwksExtractorJwkToPemAdapter } = await import(
+              './adapters/public-key-from-jwks.extractor.jwk-to-pem-adapter'
+            );
+            return new PublicKeyFromJwksExtractorJwkToPemAdapter();
           },
           loadIfFalse: async () => {
             const { PublicKeyFromJwksExtractorJoseAdapter } = await import(
