@@ -1,4 +1,4 @@
-import { Project } from '../modules/local/domain/entities/project.entity';
+import { Project } from './dtos/project.entity';
 import { CreateProjectDto, UpdateProjectDto } from './dtos/project.dto';
 
 export abstract class ProjectServicePort {

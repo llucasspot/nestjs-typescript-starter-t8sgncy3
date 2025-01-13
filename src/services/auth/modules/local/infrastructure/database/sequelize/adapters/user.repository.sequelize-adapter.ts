@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SequelizeDatabaseService } from '../../../../../../../../shared/database/infrastructure/sequelize/sequelize.database.service';
 import { SignUpDto } from '../../../../../../domain/dtos/auth.dto';
-import { User as UserEntity } from '../../../../domain/entities/user.entity';
+import { User as UserEntity } from '../../../../../../domain/dtos/user.entity';
 import { UserRepositoryPort } from '../../../../domain/user-repository.port';
 import { User } from '../models/user.model';
 

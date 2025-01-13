@@ -1,5 +1,5 @@
 import { CreateProjectDto } from '../../../../domain/dtos/project.dto';
-import { Project } from '../entities/project.entity';
+import { Project } from '../../../../domain/dtos/project.entity';
 
 export abstract class ProjectRepositoryPort {
   abstract create(body: CreateProjectDto): Promise<Project>;

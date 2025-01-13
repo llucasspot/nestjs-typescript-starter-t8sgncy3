@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthServicePort } from '../../../../domain/auth.service.port';
-import { User } from '../../domain/entities/user.entity';
+import { User } from '../../../../domain/dtos/user.entity';
 import { HashingPort } from '../../../../../../shared/hashing/domain/hashing.port';
 import { UserRepositoryPort } from '../../domain/user-repository.port';
 import { SignInDto, SignUpDto } from '../../../../domain/dtos/auth.dto';

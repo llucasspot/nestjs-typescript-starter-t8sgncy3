@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SequelizeDatabaseService } from '../../../../../../../../shared/database/infrastructure/sequelize/sequelize.database.service';
 import { CreateProjectDto } from '../../../../../../domain/dtos/project.dto';
-import { Project as ProjectEntity } from '../../../../domain/entities/project.entity';
+import { Project as ProjectEntity } from '../../../../../../domain/dtos/project.entity';
 import { ProjectRepositoryPort } from '../../../../domain/ports/project-repository.port';
 import { Project } from '../models/project.model';
 

@@ -4,7 +4,7 @@ import {
   UpdateProjectDto,
 } from '../../../../domain/dtos/project.dto';
 import { ProjectServicePort } from '../../../../domain/project.service.port';
-import { Project } from '../../domain/entities/project.entity';
+import { Project } from '../../../../domain/dtos/project.entity';
 import { ProjectRepositoryPort } from '../../domain/ports/project-repository.port';
 
 @Injectable()
