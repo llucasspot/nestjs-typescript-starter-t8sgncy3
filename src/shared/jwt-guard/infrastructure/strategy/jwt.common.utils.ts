@@ -22,7 +22,7 @@ export const buildJwtStrategyOptions = (
       done: (err: Error | null, publicKey: string | null) => TDoneResult,
     ) => {
       try {
-        const publicKey = await publicKeyGetter.get({ token });
+        const publicKey = await publicKeyGetter.getByToken({ token });
         return done(null, publicKey);
       } catch (err) {
         logger.error(err);

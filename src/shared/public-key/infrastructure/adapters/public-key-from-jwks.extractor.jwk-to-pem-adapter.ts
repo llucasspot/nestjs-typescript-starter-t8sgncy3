@@ -4,7 +4,11 @@ import {
   Logger,
 } from '@nestjs/common';
 import jwkToPem from 'jwk-to-pem';
-import { Jwk } from '../../../jwks/modules/local/domain/jwk.creator.port';
+import {
+  AvailableAlgorithm,
+  Jwk,
+  RSAJwk,
+} from '../../../jwks/modules/local/domain/jwk-from-public-key-pem.extractor.port';
 import { PublicKeyFromJwksExtractorPort } from '../../domain/ports/public-key-from-jwks.extractor.port';
 
 @Injectable()
@@ -15,7 +19,7 @@ export class PublicKeyFromJwksExtractorJwkToPemAdapter
 
   async extractFrom({ jwk }: { jwk: Jwk }): Promise<{ publicKeyPem: string }> {
     if (!this.isRSAJwk(jwk)) {
-      this.logger.error(jwk.kty !== 'RSA');
+      this.logger.error('jwk is not rsa');
       throw new InternalServerErrorException();
     }
     const publicKeyPem = jwkToPem(jwk);
@@ -24,7 +28,11 @@ export class PublicKeyFromJwksExtractorJwkToPemAdapter
     };
   }
 
-  private isRSAJwk(jwk: Jwk): jwk is Jwk & { kty: 'RSA' } {
+  private isRSAJwk(jwk: Jwk): jwk is RSAJwk & {
+    kid: string;
+    alg: AvailableAlgorithm;
+    use: string;
+  } {
     return jwk.kty === 'RSA';
   }
 }

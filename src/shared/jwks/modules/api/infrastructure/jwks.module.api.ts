@@ -1,7 +1,6 @@
 import { Module } from '@nestjs/common';
 import { JwksServicePort } from '../../../domain/jwks.service.port';
-import { JwksServiceApiAdapter } from './adapters/jwks.service.api-adapter';
-import { GetJwksUseCaseApiAdapter } from './adapters/get-jwks.use-case.api-adapter';
+import { JwksServiceApiAdapter } from '../application/jwks.service.api-adapter';
 
 @Module({
   imports: [],
@@ -10,7 +9,6 @@ import { GetJwksUseCaseApiAdapter } from './adapters/get-jwks.use-case.api-adapt
       provide: JwksServicePort,
       useClass: JwksServiceApiAdapter,
     },
-    GetJwksUseCaseApiAdapter,
   ],
   exports: [JwksServicePort],
 })
