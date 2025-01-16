@@ -9,6 +9,7 @@ export { Request } from 'express';
 
 export type UserI = {
   id: string;
+  email: string;
 };
 
 const userLogger = new Logger('User');

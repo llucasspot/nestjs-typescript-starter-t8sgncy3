@@ -17,7 +17,7 @@ import { ProjectServicePort } from '../../domain/project.service.port';
 
 @ApiBearerAuth()
 @ApiTags('projects')
-@Controller('projects')
+@Controller('/projects')
 export class ProjectController {
   constructor(private readonly projectService: ProjectServicePort) {}
 

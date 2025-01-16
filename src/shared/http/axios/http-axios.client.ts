@@ -16,7 +16,7 @@ export class HttpAxiosClient {
   constructor(
     protected readonly logger: LoggerI,
     options?: AxiosAbstractOptions,
-    private authorizationGetter?: Getter<
+    authorizationGetter?: Getter<
       | `Bearer ${string}`
       | `Basic ${string}`
       | Promise<`Bearer ${string}`>
@@ -27,7 +27,7 @@ export class HttpAxiosClient {
       .addRequestMiddleware(setRequestIdRequestMiddleware)
       .addRequestMiddleware(logDataRequestMiddleware(this.logger))
       .addRequestMiddleware(
-        setAuthorizationHeaderRequestMiddleware(this.authorizationGetter),
+        setAuthorizationHeaderRequestMiddleware(authorizationGetter),
       )
       .addResponseMiddleware(logDataResponseMiddleware(this.logger))
       .build(options);

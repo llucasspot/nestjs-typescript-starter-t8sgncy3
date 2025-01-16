@@ -9,7 +9,7 @@ import { SignInDto, SignUpDto } from '../../domain/dtos/auth.dto';
 import { AuthServicePort } from '../../domain/auth.service.port';
 
 @ApiTags('auth')
-@Controller('auth')
+@Controller('/auth')
 export class AuthController {
   constructor(private readonly authService: AuthServicePort) {}
 
