@@ -1,12 +1,7 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ApiBearerAuth } from '../../../../shared/jwt-guard/decorators/api-bearer-auth.decorator';
-import {
-  User,
-  UserI,
-} from '../../../../shared/jwt-guard/decorators/user.decorator';
-import { SignInDto, SignUpDto } from '../../domain/dtos/auth.dto';
 import { AuthServicePort } from '../../domain/auth.service.port';
+import { SignInDto, SignUpDto } from '../../domain/dtos/auth.dto';
 
 @ApiTags('auth')
 @Controller('/auth')
@@ -27,11 +22,5 @@ export class AuthController {
   @Post('signin')
   signIn(@Body() dto: SignInDto) {
     return this.authService.signIn(dto);
-  }
-
-  @ApiBearerAuth()
-  @Get('lala')
-  lala(@User() user: UserI) {
-    return user;
   }
 }
