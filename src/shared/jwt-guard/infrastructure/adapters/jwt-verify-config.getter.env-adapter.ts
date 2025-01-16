@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { StringUrl } from '../../../../services/auth/modules/local/domain/jwt-sign-config.getter.port';
+import { BaseStringUrl } from '../../../../services/auth/modules/local/domain/jwt-sign-config.getter.port';
 import {
   asymmetricAlgorithms,
   AsymmetricAlgorithms,
@@ -16,8 +16,9 @@ export class JwtVerifyConfigGetterEnvAdapter
         ? (JSON.parse(process.env.JWT_ALGPRITHMS) as AsymmetricAlgorithms)
         : asymmetricAlgorithms,
       audience:
-        (process.env.JWT_AUDIENCE as StringUrl) || 'http://exemple.com/',
-      issuer: (process.env.JWT_ISSUER as StringUrl) || 'http://exemple.com/',
+        (process.env.JWT_AUDIENCE as BaseStringUrl) || 'http://exemple.com/',
+      issuer:
+        (process.env.JWT_ISSUER as BaseStringUrl) || 'http://exemple.com/',
     };
   }
 }

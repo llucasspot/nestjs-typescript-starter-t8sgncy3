@@ -47,6 +47,13 @@ export class AuthServiceLocalAdapter implements AuthServicePort {
     return this.buildAuthResponse(user);
   }
 
+  async buildMicroserviceToken(): Promise<AuthResponse> {
+    const accessToken = await this.jwtService.signAsync({
+      role: 'microservice',
+    });
+    return { accessToken };
+  }
+
   private async buildAuthResponse(user: User) {
     const accessToken = await this.jwtService.signAsync({
       sub: user.id,

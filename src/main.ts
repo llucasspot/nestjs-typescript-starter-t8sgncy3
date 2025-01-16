@@ -6,6 +6,7 @@ import { AppConfigPort } from './app/domain/ports/app-config.port';
 import { AxiosErrorInterceptor } from './app/infrastructure/interceptors/axios.error.interceptor';
 import { ErrorInterceptor } from './app/infrastructure/interceptors/error.interceptor';
 import { MainModule } from './main.module';
+import { MicroserviceTokenGetterPort } from './shared/jwt-guard/microservice-guard/domain/microservice-token.getter.port';
 
 async function bootstrap() {
   const app = await NestFactory.create(MainModule);
@@ -29,7 +30,23 @@ async function bootstrap() {
     .setTitle(swaggerConfig.title)
     .setDescription(swaggerConfig.description)
     .setVersion(swaggerConfig.version)
-    .addBearerAuth()
+    // .addBearerAuth()
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+      'userToken',
+    )
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+      },
+      'microserviceToken',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
@@ -48,5 +65,12 @@ async function bootstrap() {
   Logger.log(
     `🚀 Swagger JSON is available at: http://localhost:${appConfig.port}/${swaggerConfig.path}-json`,
   );
+
+  // extra logs
+
+  const microserviceTokenGetter = app.get(MicroserviceTokenGetterPort);
+  const microserviceToken = await microserviceTokenGetter.get();
+
+  Logger.warn(`🔐 microservice token : ${microserviceToken}`);
 }
 bootstrap();

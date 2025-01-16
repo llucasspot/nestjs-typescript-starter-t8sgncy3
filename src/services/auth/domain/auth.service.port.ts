@@ -5,4 +5,6 @@ export abstract class AuthServicePort {
   abstract signUp(body: SignUpDto): Promise<AuthResponse>;
 
   abstract signIn(dto: SignInDto): Promise<AuthResponse>;
+
+  abstract buildMicroserviceToken(): Promise<AuthResponse>;
 }

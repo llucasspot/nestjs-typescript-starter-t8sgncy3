@@ -1,5 +1,5 @@
 import { Getter } from '../../core/getter';
-import { StringUrl } from '../../../services/auth/modules/local/domain/jwt-sign-config.getter.port';
+import { BaseStringUrl } from '../../../services/auth/modules/local/domain/jwt-sign-config.getter.port';
 
 export const asymmetricAlgorithms = [
   'RS256',
@@ -16,8 +16,8 @@ export const asymmetricAlgorithms = [
 export type AsymmetricAlgorithms = typeof asymmetricAlgorithms;
 
 export type JwtVerifyConfig = {
-  issuer: StringUrl;
-  audience: StringUrl;
+  issuer: BaseStringUrl;
+  audience: BaseStringUrl;
   algorithms: AsymmetricAlgorithms;
 };
 

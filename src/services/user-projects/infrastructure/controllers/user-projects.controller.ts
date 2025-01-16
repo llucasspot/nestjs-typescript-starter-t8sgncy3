@@ -8,12 +8,14 @@ import {
   Put,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiMicroserviceAuth } from '../../../../shared/jwt-guard/microservice-guard/decorators/api-microservice-auth.decorator';
 import {
   CreateProjectDto,
   UpdateProjectDto,
 } from '../../../project/domain/dtos/project.dto';
 import { UserProjectsServicePort } from '../../domain/user-projects.service.port';
 
+@ApiMicroserviceAuth()
 @ApiTags('user projects')
 @Controller('/users/:userId/projects')
 export class UserProjectsController {

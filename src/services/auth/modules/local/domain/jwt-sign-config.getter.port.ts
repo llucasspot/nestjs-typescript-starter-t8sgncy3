@@ -1,6 +1,7 @@
 import { Getter } from '../../../../../shared/core/getter';
 
-export type StringUrl = `http://${string}/` | `https://${string}/`;
+export type BaseStringUrl = `http://${string}/` | `https://${string}/`;
+export type StringUrl = `http://${string}` | `https://${string}`;
 
 export type ExpiresIn =
   | `${number}m`
@@ -12,8 +13,8 @@ export type ExpiresIn =
 export type JwtSignConfig = {
   expiresIn: ExpiresIn;
   refreshTokenExpiresIn: ExpiresIn;
-  issuer: StringUrl;
-  audience: StringUrl;
+  issuer: BaseStringUrl;
+  audience: BaseStringUrl;
 };
 
 export abstract class JwtSignConfigGetterPort extends Getter<JwtSignConfig> {}

@@ -1,29 +1,17 @@
-import {
-  Abstract,
-  applyDecorators,
-  HttpStatus,
-  UseGuards,
-} from '@nestjs/common';
-import { CanActivate } from '@nestjs/common/interfaces';
+import { applyDecorators, UseGuards } from '@nestjs/common';
 import {
   ApiBearerAuth as SwaggerApiBearerAuth,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { JwtGuard } from '../infrastructure/strategy/jwt.guard';
-
-export class ApiUnauthorizedResponseErrorData {
-  message: string = 'Unauthorized';
-  error?: string = 'Unauthorized';
-  statusCode: number = HttpStatus.UNAUTHORIZED;
-}
+import { ApiUnauthorizedResponseErrorBody } from './types/api-unauthorized-response-error-body';
 
 export function ApiBearerAuth() {
-  const guards: Abstract<CanActivate>[] = [JwtGuard];
   return applyDecorators(
     ApiUnauthorizedResponse({
-      type: ApiUnauthorizedResponseErrorData,
+      type: ApiUnauthorizedResponseErrorBody,
     }),
-    SwaggerApiBearerAuth(),
-    UseGuards(...guards),
+    SwaggerApiBearerAuth('userToken'),
+    UseGuards(JwtGuard),
   );
 }

@@ -7,6 +7,6 @@ import { JwtStrategy } from './strategy/jwt.strategy';
 @Module({
   imports: [PublicKeyModule, JwtConfigModule],
   providers: [JwtGuard, JwtStrategy],
-  exports: [JwtGuard],
+  exports: [],
 })
 export class JwtGuardModule {}
