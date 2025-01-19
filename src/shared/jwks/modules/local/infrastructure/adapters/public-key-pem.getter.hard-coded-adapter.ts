@@ -14,6 +14,7 @@ TC65B9G+9vtszk8dMhixL/oaJQR4aoJVyl806uYadRKWZY2dJFk8BZGN2/bpMqAG
 s2y3sx0inBfwkAIOHu6ynIAwqXMuvpfb6wSoUwnIq7l3+fhpsR0sE1arl9m18vJN
 fvdC+LReP3xIj5UFrgJNxcIO6XOB9BOGQGVrz05py6IuVwLTwqLpjFSXEhbgT1wg
 fwIDAQAB
------END PUBLIC KEY-----`;
+-----END PUBLIC KEY-----
+`;
   }
 }
