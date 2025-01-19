@@ -1,8 +1,8 @@
 import { ExecutionContext, Injectable, Logger } from '@nestjs/common';
 import { ExecutionContextHost } from '@nestjs/core/helpers/execution-context-host';
 import { AuthGuard } from '@nestjs/passport';
-import { UserI } from '../../../decorators/user.decorator';
-import { handleJwtStrategyRequest } from '../../../infrastructure/strategy/jwt.common.utils';
+import { UserI } from '../../../jwt-guard/decorators/user.decorator';
+import { handleJwtStrategyRequest } from '../../../jwt-guard/infrastructure/strategy/jwt.common.utils';
 
 // @Injectable()
 // export class MicroserviceGuard implements CanActivate {

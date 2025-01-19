@@ -5,7 +5,7 @@ import {
   UserProjectsMicroserviceConfigGetterPort,
 } from '../../../../../../shared/config/domain/user-projects-microservice-config.getter.port';
 import { HttpAxiosClient } from '../../../../../../shared/http/axios/http-axios.client';
-import { MicroserviceTokenGetterPort } from '../../../../../../shared/jwt-guard/microservice-guard/domain/microservice-token.getter.port';
+import { MicroserviceTokenGetterPort } from '../../../../../../shared/microservice-guard/domain/microservice-token.getter.port';
 import {
   CreateProjectDto,
   UpdateProjectDto,

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { decode } from 'jsonwebtoken';
-import { JwtHeaderExtractorPort } from '../../domain/ports/jwt-header.extractor.port';
+import { JwtHeaderExtractorPort } from '../../../../domain/ports/jwt-header.extractor.port';
 
 @Injectable()
 export class JwtHeaderExtractorJsonwebtokenAdapter

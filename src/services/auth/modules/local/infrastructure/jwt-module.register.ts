@@ -1,34 +1,35 @@
 import { InternalServerErrorException } from '@nestjs/common';
 import { JwtModule, JwtModuleOptions, JwtSecretRequestType } from '@nestjs/jwt';
-import { PrivateKeyPemGetterPort } from '../../../../../shared/jwks/modules/local/application/private-key-pem.getter.port';
-import { JwtConfigModule } from '../../../../../shared/jwt-guard/infrastructure/jwt.config.module';
-import { PublicKeyGetter } from '../../../../../shared/public-key/domain/public-key.getter';
-import { PublicKeyModule } from '../../../../../shared/public-key/infrastructure/public-key.module';
-import { JwtSignConfigGetterPort } from '../domain/jwt-sign-config.getter.port';
 import { JwtVerifyConfigGetterPort } from '../../../../../shared/jwt-guard/domain/jwt-verify-config.getter.port';
+import { JwtConfigModule } from '../../../../../shared/jwt-guard/infrastructure/jwt.config.module';
+import { KeyGettersGetter } from '../../../../../shared/key-getters-getter/domain/key-getters.getter';
+import { KeyGettersGetterModule } from '../../../../../shared/key-getters-getter/infrastructure/key-getters.getter.module';
+import { JwtSignConfigGetterPort } from '../domain/jwt-sign-config.getter.port';
 import { AuthConfModule } from './auth-conf.module';
 
 export const JwtModuleRegister = () =>
   JwtModule.registerAsync({
-    imports: [AuthConfModule, JwtConfigModule, PublicKeyModule],
+    imports: [AuthConfModule, JwtConfigModule, KeyGettersGetterModule],
     inject: [
       JwtSignConfigGetterPort,
       JwtVerifyConfigGetterPort,
-      PublicKeyGetter,
-      PrivateKeyPemGetterPort,
+      KeyGettersGetter,
     ],
     useFactory: async (
       jwtSignConfigGetter: JwtSignConfigGetterPort,
       jwtVerifyConfigGetter: JwtVerifyConfigGetterPort,
-      publicKeyGetter: PublicKeyGetter,
-      privateKeyPemGetter: PrivateKeyPemGetterPort,
+      keyGettersGetter: KeyGettersGetter,
     ) => {
-      const privateKeyPem = await privateKeyPemGetter.get();
+      const jwtSignConfig = jwtSignConfigGetter.get();
+      const algorithm = jwtSignConfig.alg;
+      const { publicKeyGetter, privateKeyGetter } = keyGettersGetter.get({
+        algorithm,
+      });
 
       const secretOrKeyProvider: JwtModuleOptions['secretOrKeyProvider'] =
         async (requestType, tokenOrPayload) => {
           if (requestType === JwtSecretRequestType.SIGN) {
-            return privateKeyPem;
+            return privateKeyGetter.get();
           }
           if (requestType === JwtSecretRequestType.VERIFY) {
             const token = tokenOrPayload as string;
@@ -37,17 +38,15 @@ export const JwtModuleRegister = () =>
           throw new InternalServerErrorException('impossible request type');
         };
 
-      const jwtSignConfig = jwtSignConfigGetter.get();
       const jwtVerifyConfig = jwtVerifyConfigGetter.get();
-      const jwk = await publicKeyGetter.getJwkByKid({ kid: '1' });
       return {
         secretOrKeyProvider,
         signOptions: {
           expiresIn: jwtSignConfig.expiresIn,
           issuer: jwtSignConfig.issuer,
           audience: jwtSignConfig.audience,
-          algorithm: jwk.alg,
-          keyid: jwk.kid,
+          algorithm: algorithm,
+          keyid: jwtSignConfig.kid,
         },
         verifyOptions: {
           algorithms: [...jwtVerifyConfig.algorithms],

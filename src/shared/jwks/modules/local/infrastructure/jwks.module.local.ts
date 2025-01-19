@@ -1,45 +1,23 @@
 import { Module } from '@nestjs/common';
 import { AuthConfModule } from '../../../../../services/auth/modules/local/infrastructure/auth-conf.module';
-import { LocalFilePathResolverPort } from '../../../../file/local-file-path.resolver.port';
 import { inWebContainer } from '../../../../hashing/infrastructure/in-web-container';
 import { JwksServicePort } from '../../../domain/jwks.service.port';
 import { JwksServiceLocalAdapter } from '../application/jwks.service.local-adapter';
 import { PublicKeyPemGetterPort } from '../application/public-key-pem.getter.port';
 import { JwkFromPublicKeyPemExtractorPort } from '../domain/jwk-from-public-key-pem.extractor.port';
-import { JwksConfigPort } from '../domain/jwks-config.port';
+import { PublicKeyPemGetterFsAdapter } from './adapters/public-key-pem.getter.fs-adapter';
 
 @Module({
   imports: [AuthConfModule],
   providers: [
+    JwksServiceLocalAdapter,
     {
       provide: JwksServicePort,
       useClass: JwksServiceLocalAdapter,
     },
     {
       provide: PublicKeyPemGetterPort,
-      inject: [JwksConfigPort, LocalFilePathResolverPort],
-      useFactory: (
-        jwksConfig: JwksConfigPort,
-        localFilePathResolver: LocalFilePathResolverPort,
-      ): Promise<PublicKeyPemGetterPort> => {
-        return inWebContainer<PublicKeyPemGetterPort>({
-          loadIfTrue: async () => {
-            const { PublicKeyPemGetterHardCodedAdapter } = await import(
-              './adapters/public-key-pem.getter.hard-coded-adapter'
-            );
-            return new PublicKeyPemGetterHardCodedAdapter();
-          },
-          loadIfFalse: async () => {
-            const { PublicKeyPemGetterFsAdapter } = await import(
-              './adapters/public-key-pem.getter.fs-adapter'
-            );
-            return new PublicKeyPemGetterFsAdapter(
-              jwksConfig,
-              localFilePathResolver,
-            );
-          },
-        });
-      },
+      useClass: PublicKeyPemGetterFsAdapter,
     },
     {
       provide: JwkFromPublicKeyPemExtractorPort,
@@ -62,6 +40,6 @@ import { JwksConfigPort } from '../domain/jwks-config.port';
       },
     },
   ],
-  exports: [JwksServicePort],
+  exports: [JwksServicePort, JwksServiceLocalAdapter],
 })
 export class JwksModuleLocal {}

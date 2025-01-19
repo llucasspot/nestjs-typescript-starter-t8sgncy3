@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { exportJWK, importSPKI } from 'jose';
 import {
-  AvailableAlgorithm,
+  AsymmetricAlgorithm,
   ECJwk,
   Jwk,
   JwkFromPublicKeyPemExtractorPort,
@@ -17,7 +17,7 @@ export class JwkFromPublicKeyPemExtractorJoseAdapter
     alg,
   }: {
     publicKeyPem: string;
-    alg: AvailableAlgorithm;
+    alg: AsymmetricAlgorithm;
   }): Promise<Jwk> {
     const publicKey = await importSPKI(publicKeyPem, alg);
     const jwk = (await exportJWK(publicKey)) as ECJwk | RSAJwk;

@@ -6,7 +6,7 @@ import { AppConfigPort } from './app/domain/ports/app-config.port';
 import { AxiosErrorInterceptor } from './app/infrastructure/interceptors/axios.error.interceptor';
 import { ErrorInterceptor } from './app/infrastructure/interceptors/error.interceptor';
 import { MainModule } from './main.module';
-import { MicroserviceTokenGetterPort } from './shared/jwt-guard/microservice-guard/domain/microservice-token.getter.port';
+import { MicroserviceTokenGetterPort } from './shared/microservice-guard/domain/microservice-token.getter.port';
 
 async function bootstrap() {
   const app = await NestFactory.create(MainModule);

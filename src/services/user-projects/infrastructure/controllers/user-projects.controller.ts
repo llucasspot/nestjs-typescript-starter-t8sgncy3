@@ -8,7 +8,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ApiMicroserviceAuth } from '../../../../shared/jwt-guard/microservice-guard/decorators/api-microservice-auth.decorator';
+import { ApiMicroserviceAuth } from '../../../../shared/microservice-guard/decorators/api-microservice-auth.decorator';
 import {
   CreateProjectDto,
   UpdateProjectDto,

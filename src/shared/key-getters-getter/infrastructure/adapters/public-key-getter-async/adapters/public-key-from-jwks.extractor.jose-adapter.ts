@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { exportSPKI, importJWK, KeyLike } from 'jose';
-import { Jwk } from '../../../jwks/modules/local/domain/jwk-from-public-key-pem.extractor.port';
-import { PublicKeyFromJwksExtractorPort } from '../../domain/ports/public-key-from-jwks.extractor.port';
+import { Jwk } from '../../../../../jwks/modules/local/domain/jwk-from-public-key-pem.extractor.port';
+import { PublicKeyFromJwksExtractorPort } from '../../../../domain/ports/public-key-from-jwks.extractor.port';
 
 @Injectable()
 export class PublicKeyFromJwksExtractorJoseAdapter

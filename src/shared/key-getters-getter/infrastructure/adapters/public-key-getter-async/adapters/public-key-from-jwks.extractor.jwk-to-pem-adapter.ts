@@ -5,11 +5,11 @@ import {
 } from '@nestjs/common';
 import jwkToPem from 'jwk-to-pem';
 import {
-  AvailableAlgorithm,
+  AsymmetricAlgorithm,
   Jwk,
   RSAJwk,
-} from '../../../jwks/modules/local/domain/jwk-from-public-key-pem.extractor.port';
-import { PublicKeyFromJwksExtractorPort } from '../../domain/ports/public-key-from-jwks.extractor.port';
+} from '../../../../../jwks/modules/local/domain/jwk-from-public-key-pem.extractor.port';
+import { PublicKeyFromJwksExtractorPort } from '../../../../domain/ports/public-key-from-jwks.extractor.port';
 
 @Injectable()
 export class PublicKeyFromJwksExtractorJwkToPemAdapter
@@ -30,7 +30,7 @@ export class PublicKeyFromJwksExtractorJwkToPemAdapter
 
   private isRSAJwk(jwk: Jwk): jwk is RSAJwk & {
     kid: string;
-    alg: AvailableAlgorithm;
+    alg: AsymmetricAlgorithm;
     use: string;
   } {
     return jwk.kty === 'RSA';

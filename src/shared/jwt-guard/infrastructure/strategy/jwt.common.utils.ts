@@ -3,13 +3,13 @@ import { ExecutionContextHost } from '@nestjs/core/helpers/execution-context-hos
 import { Request } from 'express';
 import { ExtractJwt } from 'passport-jwt';
 import { JwtVerifyConfig } from '../../domain/jwt-verify-config.getter.port';
-import { PublicKeyGetter } from '../../../public-key/domain/public-key.getter';
+import { PublicKeyGetterPort } from '../../../key-getters-getter/public-key-getter/public-key.getter.port';
 import { LoggerI } from '../../../http/logger.interface';
 import { UserI } from '../../decorators/user.decorator';
 
 export const buildJwtStrategyOptions = (
   logger: LoggerI,
-  publicKeyGetter: PublicKeyGetter,
+  publicKeyGetter: PublicKeyGetterPort,
   options: JwtVerifyConfig,
 ) => {
   const { algorithms, issuer, audience } = options;

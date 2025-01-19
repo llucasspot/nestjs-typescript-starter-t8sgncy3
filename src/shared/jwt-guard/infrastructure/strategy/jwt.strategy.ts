@@ -3,7 +3,7 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-jwt';
 import { JwtVerifyConfigGetterPort } from '../../domain/jwt-verify-config.getter.port';
 import { LoggerI } from '../../../http/logger.interface';
-import { PublicKeyGetter } from '../../../public-key/domain/public-key.getter';
+import { PublicKeyGetterPort } from '../../../key-getters-getter/public-key-getter/public-key.getter.port';
 import { buildJwtStrategyOptions } from './jwt.common.utils';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'JwtStrategy') {
 
   constructor(
     jwtVerifyConfigGetter: JwtVerifyConfigGetterPort,
-    publicKeyGetter: PublicKeyGetter,
+    publicKeyGetter: PublicKeyGetterPort,
   ) {
     const logger = new Logger(JwtStrategy.name);
     super(

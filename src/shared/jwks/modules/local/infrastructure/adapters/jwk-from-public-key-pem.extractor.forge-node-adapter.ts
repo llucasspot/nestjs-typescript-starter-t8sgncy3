@@ -28,7 +28,6 @@ export class JwkFromPublicKeyPemExtractorForgeNodeAdapter
       this.logger.error('forge-node only support RSA');
       throw new InternalServerErrorException();
     }
-
     const jwk = pki.publicKeyFromPem(publicKeyPem);
     const n = Buffer.from(jwk.n.toByteArray()).toString('base64url');
     const e = Buffer.from(jwk.e.toByteArray()).toString('base64url');
