@@ -16,16 +16,15 @@ export class JwksServiceLocalAdapter implements JwksServicePort {
   constructor(
     private readonly jwkFromPublicKeyPemExtractor: JwkFromPublicKeyPemExtractorPort,
     private readonly publicKeyPemGetter: PublicKeyPemGetterPort,
-    jwtSignConfigGetter: JwtSignConfigGetterPort,
-  ) {
-    const alg = jwtSignConfigGetter.get().alg;
+    private readonly jwtSignConfigGetter: JwtSignConfigGetterPort,
+  ) {}
+
+  async getJwks(): Promise<Jwks> {
+    const alg = this.jwtSignConfigGetter.get().alg;
     if (!ArrayIncludes(asymmetricAlgorithms, alg)) {
       throw new InternalServerErrorException('alg no asymmetric algorithm');
     }
     this.alg = alg;
-  }
-
-  async getJwks(): Promise<Jwks> {
     const publicKeyPem = await this.publicKeyPemGetter.get();
     const jwk = await this.jwkFromPublicKeyPemExtractor.extractFrom({
       publicKeyPem,

@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { runningInWebContainer } from '../../../../../../shared/hashing/infrastructure/in-web-container';
 import { AvailableAlgorithm } from '../../../../../../shared/jwks/modules/local/domain/jwk-from-public-key-pem.extractor.port';
 import {
   ExpiresIn,
@@ -20,7 +19,7 @@ export class JwtSignConfigGetterEnvAdapter implements JwtSignConfigGetterPort {
         (process.env.JWT_REFRESH_TOKEN_EXPIRES_IN as ExpiresIn) || '2d',
       alg:
         (process.env.JWT_ALG as AvailableAlgorithm) ||
-        (runningInWebContainer ? 'HS256' : 'RS256'),
+        (true ? 'HS256' : 'RS256'),
       kid: (process.env.JWT_KID as string) || '1',
     };
   }
