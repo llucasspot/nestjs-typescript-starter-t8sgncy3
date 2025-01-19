@@ -12,7 +12,7 @@ function isRunningInWebContainer(): boolean {
   return false;
 }
 
-const runningInWebContainer = isRunningInWebContainer();
+export const runningInWebContainer = isRunningInWebContainer();
 
 export const inWebContainer = <TPort>({
   loadIfTrue,
