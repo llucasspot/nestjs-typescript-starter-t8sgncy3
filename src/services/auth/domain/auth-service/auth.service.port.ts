@@ -6,5 +6,5 @@ export abstract class AuthServicePort {
 
   abstract signIn(dto: SignInDto): Promise<AuthResponse>;
 
-  abstract buildMicroserviceToken(): Promise<AuthResponse>;
+  abstract signInUser(userId: string): Promise<AuthResponse>;
 }

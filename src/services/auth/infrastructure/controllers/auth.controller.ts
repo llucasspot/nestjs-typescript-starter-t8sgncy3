@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { AuthServicePort } from '../../domain/auth.service.port';
-import { SignInDto, SignUpDto } from '../../domain/dtos/auth.dto';
+import { AuthServicePort } from '../../domain/auth-service/auth.service.port';
+import { SignInDto, SignUpDto } from '../../domain/auth-service/dtos/auth.dto';
 
 @ApiTags('auth')
 @Controller('/auth')

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AuthMicroserviceServicePort } from '../../../../../services/auth/domain/auth-microservice.service.port';
+import { AuthMicroserviceServicePort } from '../../../../../services/auth/domain/auth-service/auth-microservice.service.port';
 import { MicroserviceTokenGetterPort } from '../../domain/microservice-token.getter.port';
 
 @Injectable()

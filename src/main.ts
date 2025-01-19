@@ -15,6 +15,7 @@ async function bootstrap() {
   const swaggerConfig = app.get(SwaggerConfigPort);
 
   app.setGlobalPrefix(appConfig.globalPrefix);
+  app.enableCors(appConfig.cors);
 
   // interceptors
 

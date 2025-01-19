@@ -1,7 +1,7 @@
 import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
 @Table({ tableName: 'users' })
-export class User extends Model {
+export class UserSequelizeModel extends Model {
   @Column({
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
