@@ -1,0 +1,39 @@
+import { Injectable } from '@nestjs/common';
+import { PrivateKeyPemGetterPort } from '../../application/private-key-pem.getter.port';
+
+@Injectable()
+export class PrivateKeyPemGetterHardCodedAdapter
+  implements PrivateKeyPemGetterPort
+{
+  async get(): Promise<string> {
+    return `-----BEGIN PRIVATE KEY-----
+MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCNIZPvrZ/daweo
+RcWwKAwI4THHBnxUW8z3fegwES/kMDsR6tUHFUMHMSLcH3HpGgG9ZU6fLLAMWGTE
+xgkOD4zE0DbYp0BH3OaaAEwfyyTPqVoIPcNQPg7jPcb57jeTlHKYiQRxmYspjCJT
+EIMcRdJMLrkH0b72+2zOTx0yGLEv+holBHhqglXKXzTq5hp1EpZljZ0kWTwFkY3b
+9ukyoAazbLezHSKcF/CQAg4e7rKcgDCpcy6+l9vrBKhTCciruXf5+GmxHSwTVquX
+2bXy8k1+90L4tF4/fEiPlQWuAk3Fwg7pc4H0E4ZAZWvPTmnLoi5XAtPCoumMVJcS
+FuBPXCB/AgMBAAECggEACvSSUUapuZG3Xx6ba+3lO+3kjqM4P4F+IFrLt/99jORu
+5sMolODXpSqb9CO/ae2KOQjbg4uqgYAobQXvv1cBrGglTx1x5feF3GqC05enXIoJ
+jR447R+uyYEK0xfk2eCUzLZw0TNZaXjmqTVc7XLrZ4fboSRtAysdP8lFu5UjHAAx
+QNDCqKeeJhB9oFCVKheCr0BOEMdO3jOvJQvl08Kja/PwC2HKkpIhvJ1rQ+nUl8YX
+za5f1jTQxmP4QvlfWH16ornbVTifktMdOaNHPO+Kd1lhuB1a4CMA7VIMR9vG7SAY
+qgXM9tvKpGK7jMz5EJxYfcQyIEZU3pfzzrIMKB6lgQKBgQDG/0eR/kuPg7QqZclB
+uDJ2yiR/xeT+jf9Jge2+hjNkViqqJGPxYGCb5ogtOceHq3MrvMGOtm28sjqb6GFi
+BDG3yB1ze/xdGEhM3wPM7tVIz0CvFMpsSy9LjtETt8nBIsH0HcWFFm4JXUQ/jh3w
+ffNUnKvbumtlMUmDhfVh0VasnwKBgQC1juiBLDEQiEnE74xIni3hePmJeJ514oax
+RtyBNZwT7Qpuef/Yakcqlu7uai4nVqGfL9AtcDqttDTDb+jc6nMHZ87qT6H+NamO
+we9lTF5mECtnKdbw6AdKWM/OtU3HZlzF6i8yNN14UNxnbBHz1uNL83hJbYpa4Mnw
+06lAQOQgIQKBgHSDW4BbiBpLXt3EIwZbtxBeYuh9EgsJUQPVE0KOiOCiovBjxjC5
+4Vbmr6zrO6xv8ksVha7tmWr2X+KROROOqR2WCchoO+a2JP79RNhkrnSnBJR+c9bc
+XqC6yiflYDe5Bh7Mn63A6ESLWz5rE5SP6j0MToOkruTc6tIbSQUw8LK5AoGAFAbQ
+dLcoLleqM3Ps+HGiQ/WxKM3KRNyY2OMlHYeJUNVbyjXg18FZWkRN1LSXpLU0nLeM
+cgaoIlL3YvtsJzohOBbmRwhDqSPIMTwJKRZUb1OnRfjiga5GZ5gGTBnJm44Z+6bK
+T/Ju33+j4DCWhlwUtGMFyKuxkDatb8gZKkI+J6ECgYBBWBNzCu9Sje9HSmOW5T9D
+LNT3ZA6UU2qGZi8tT1X1Q3bkQgwuSepvzXm0eCpEjURk2p2NKE7NVbUz6A5H0JOy
+7Wj7BO0BOdfsddeCnb9NcMhMf2GFimrn0Q+Wpfx5buBnsLkxeqaLTbTuFGOOw0MA
+5iP7grRCWP3JZ3fECZCKxw==
+-----END PRIVATE KEY-----
+`;
+  }
+}

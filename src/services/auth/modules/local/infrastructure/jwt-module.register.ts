@@ -1,6 +1,6 @@
 import { InternalServerErrorException } from '@nestjs/common';
 import { JwtModule, JwtModuleOptions, JwtSecretRequestType } from '@nestjs/jwt';
-import { PrivateKeyPemGetter } from '../../../../../shared/jwks/modules/local/application/private-key-pem.getter';
+import { PrivateKeyPemGetterPort } from '../../../../../shared/jwks/modules/local/application/private-key-pem.getter.port';
 import { JwtConfigModule } from '../../../../../shared/jwt-guard/infrastructure/jwt.config.module';
 import { PublicKeyGetter } from '../../../../../shared/public-key/domain/public-key.getter';
 import { PublicKeyModule } from '../../../../../shared/public-key/infrastructure/public-key.module';
@@ -15,13 +15,13 @@ export const JwtModuleRegister = () =>
       JwtSignConfigGetterPort,
       JwtVerifyConfigGetterPort,
       PublicKeyGetter,
-      PrivateKeyPemGetter,
+      PrivateKeyPemGetterPort,
     ],
     useFactory: async (
       jwtSignConfigGetter: JwtSignConfigGetterPort,
       jwtVerifyConfigGetter: JwtVerifyConfigGetterPort,
       publicKeyGetter: PublicKeyGetter,
-      privateKeyPemGetter: PrivateKeyPemGetter,
+      privateKeyPemGetter: PrivateKeyPemGetterPort,
     ) => {
       const privateKeyPem = await privateKeyPemGetter.get();
 

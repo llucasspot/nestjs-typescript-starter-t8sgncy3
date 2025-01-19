@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import fs from 'fs';
-import { Getter } from '../../../../core/getter';
-import { LocalFilePathResolverPort } from '../../../../file/local-file-path.resolver.port';
-import { JwksConfigPort } from '../domain/jwks-config.port';
+import { LocalFilePathResolverPort } from '../../../../../file/local-file-path.resolver.port';
+import { PublicKeyPemGetterPort } from '../../application/public-key-pem.getter.port';
+import { JwksConfigPort } from '../../domain/jwks-config.port';
 
 @Injectable()
-export class PublicKeyPemGetter implements Getter<Promise<string>> {
+export class PublicKeyPemGetterFsAdapter implements PublicKeyPemGetterPort {
   constructor(
     private readonly jwksConfig: JwksConfigPort,
     private readonly localFilePathResolver: LocalFilePathResolverPort,

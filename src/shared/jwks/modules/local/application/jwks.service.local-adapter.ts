@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { Jwks, JwksServicePort } from '../../../domain/jwks.service.port';
 import { JwkFromPublicKeyPemExtractorPort } from '../domain/jwk-from-public-key-pem.extractor.port';
-import { PublicKeyPemGetter } from './public-key-pem.getter';
+import { PublicKeyPemGetterPort } from './public-key-pem.getter.port';
 
 @Injectable()
 export class JwksServiceLocalAdapter implements JwksServicePort {
   constructor(
     private readonly jwkFromPublicKeyPemExtractor: JwkFromPublicKeyPemExtractorPort,
-    private readonly publicKeyPemGetter: PublicKeyPemGetter,
+    private readonly publicKeyPemGetter: PublicKeyPemGetterPort,
   ) {}
 
   async getJwks(): Promise<Jwks> {
