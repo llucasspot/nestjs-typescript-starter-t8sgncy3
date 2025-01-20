@@ -6,11 +6,9 @@ import {
 } from '../../../../../../shared/config/domain/user-projects-microservice-config.getter.port';
 import { HttpAxiosClient } from '../../../../../../shared/http/axios/http-axios.client';
 import { MicroserviceTokenGetterPort } from '../../../../../../shared/microservice-guard/domain/microservice-token.getter.port';
-import {
-  CreateProjectDto,
-  UpdateProjectDto,
-} from '../../../../../project/domain/dtos/project.dto';
-import { Project } from '../../../../../project/domain/dtos/project.entity';
+import { CreateProjectDto } from '../../../../../project/domain/dtos/create-project.dto';
+import { UpdateProjectDto } from '../../../../../project/domain/dtos/update-project.dto';
+import { ProjectDto } from '../../../../../project/domain/dtos/project.dto';
 import {
   UserProjectsServiceFindAllBody,
   UserProjectsServiceFindOneBody,
@@ -32,7 +30,9 @@ export class UserProjectsServiceApiAdapter implements UserProjectsServicePort {
     this.config = userProjectsMicroserviceConfigGetter.get();
   }
 
-  async findAll(findBody: UserProjectsServiceFindAllBody): Promise<Project[]> {
+  async findAll(
+    findBody: UserProjectsServiceFindAllBody,
+  ): Promise<ProjectDto[]> {
     const { url, query } = this.config.findAllEndpoint(findBody);
     const accessToken = await this.microserviceTokenGetter.get();
     const config: AxiosRequestConfig = {
@@ -41,14 +41,14 @@ export class UserProjectsServiceApiAdapter implements UserProjectsServicePort {
         Authorization: `Bearer ${accessToken}`,
       },
     };
-    const response = await this.client.get<Project[]>(url, config);
+    const response = await this.client.get<ProjectDto[]>(url, config);
     return response.data;
   }
 
   async createOne(
     findBody: UserProjectsServiceFindAllBody,
     createBody: CreateProjectDto,
-  ): Promise<Project> {
+  ): Promise<ProjectDto> {
     const {
       url,
       query,
@@ -65,13 +65,13 @@ export class UserProjectsServiceApiAdapter implements UserProjectsServicePort {
       ...createBody,
       ...endpointConfBody,
     };
-    const response = await this.client.post<Project>(url, body, config);
+    const response = await this.client.post<ProjectDto>(url, body, config);
     return response.data;
   }
 
   async findOneById(
     findBody: UserProjectsServiceFindOneBody,
-  ): Promise<Project> {
+  ): Promise<ProjectDto> {
     const { url, query } = this.config.findAllEndpoint(findBody);
     const accessToken = await this.microserviceTokenGetter.get();
     const config: AxiosRequestConfig = {
@@ -80,14 +80,14 @@ export class UserProjectsServiceApiAdapter implements UserProjectsServicePort {
         Authorization: `Bearer ${accessToken}`,
       },
     };
-    const response = await this.client.get<Project>(url, config);
+    const response = await this.client.get<ProjectDto>(url, config);
     return response.data;
   }
 
   async updateOne(
     findBody: UserProjectsServiceFindOneBody,
     updateBody: UpdateProjectDto,
-  ): Promise<Project> {
+  ): Promise<ProjectDto> {
     const {
       url,
       query,
@@ -104,7 +104,7 @@ export class UserProjectsServiceApiAdapter implements UserProjectsServicePort {
       ...updateBody,
       ...endpointConfBody,
     };
-    const response = await this.client.put<Project>(url, body, config);
+    const response = await this.client.put<ProjectDto>(url, body, config);
     return response.data;
   }
 

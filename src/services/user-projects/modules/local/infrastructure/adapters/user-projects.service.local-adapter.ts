@@ -1,9 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-  CreateProjectDto,
-  UpdateProjectDto,
-} from '../../../../../project/domain/dtos/project.dto';
-import { Project } from '../../../../../project/domain/dtos/project.entity';
+import { CreateProjectDto } from '../../../../../project/domain/dtos/create-project.dto';
+import { UpdateProjectDto } from '../../../../../project/domain/dtos/update-project.dto';
+import { ProjectDto } from '../../../../../project/domain/dtos/project.dto';
 import { ProjectServicePort } from '../../../../../project/domain/project.service.port';
 import {
   UserProjectsServiceFindAllBody,
@@ -23,19 +21,19 @@ export class UserProjectsServiceLocalAdapter
 
   async findAll({
     userId,
-  }: UserProjectsServiceFindAllBody): Promise<Project[]> {
-    // TODO use it
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  }: UserProjectsServiceFindAllBody): Promise<ProjectDto[]> {
     const userProjects = await this.userProjectsRepository.findAll({
       userId,
     });
-    return this.projectServicePort.findAll();
+    return this.projectServicePort.findAll(
+      userProjects.map(({ projectId }) => projectId),
+    );
   }
 
   async createOne(
     { userId }: UserProjectsServiceFindAllBody,
     body: CreateProjectDto,
-  ): Promise<Project> {
+  ): Promise<ProjectDto> {
     const project = await this.projectServicePort.createOne(body);
     await this.userProjectsRepository.create({
       userId,
@@ -47,7 +45,7 @@ export class UserProjectsServiceLocalAdapter
   async findOneById({
     userId,
     projectId,
-  }: UserProjectsServiceFindOneBody): Promise<Project> {
+  }: UserProjectsServiceFindOneBody): Promise<ProjectDto> {
     const userProject = await this.userProjectsRepository.findOne({
       userId,
       projectId,
@@ -61,7 +59,7 @@ export class UserProjectsServiceLocalAdapter
   async updateOne(
     { userId, projectId }: UserProjectsServiceFindOneBody,
     body: UpdateProjectDto,
-  ): Promise<Project> {
+  ): Promise<ProjectDto> {
     const userProject = await this.userProjectsRepository.findOne({
       userId,
       projectId,

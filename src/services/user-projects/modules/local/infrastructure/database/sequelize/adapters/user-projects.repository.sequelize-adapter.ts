@@ -12,7 +12,7 @@ export class UserProjectsRepositorySequelizeAdapter
   private readonly model = UserProjectSequelizeModel;
 
   constructor(sequelizeDatabaseService: SequelizeDatabaseService) {
-    sequelizeDatabaseService.sequelize.addModels([this.model]);
+    sequelizeDatabaseService.addModel(this.model);
   }
 
   async create({

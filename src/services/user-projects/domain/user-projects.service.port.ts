@@ -1,8 +1,6 @@
-import {
-  CreateProjectDto,
-  UpdateProjectDto,
-} from '../../project/domain/dtos/project.dto';
-import { Project } from '../../project/domain/dtos/project.entity';
+import { CreateProjectDto } from '../../project/domain/dtos/create-project.dto';
+import { UpdateProjectDto } from '../../project/domain/dtos/update-project.dto';
+import { ProjectDto } from '../../project/domain/dtos/project.dto';
 
 export type UserProjectsServiceFindAllBody = {
   userId: string;
@@ -16,21 +14,21 @@ export type UserProjectsServiceFindOneBody = {
 export abstract class UserProjectsServicePort {
   abstract findAll(
     findAllBody: UserProjectsServiceFindAllBody,
-  ): Promise<Project[]>;
+  ): Promise<ProjectDto[]>;
 
   abstract createOne(
     findAllBody: UserProjectsServiceFindAllBody,
     body: CreateProjectDto,
-  ): Promise<Project>;
+  ): Promise<ProjectDto>;
 
   abstract findOneById(
     findOneBody: UserProjectsServiceFindOneBody,
-  ): Promise<Project>;
+  ): Promise<ProjectDto>;
 
   abstract updateOne(
     findOneBody: UserProjectsServiceFindOneBody,
     body: UpdateProjectDto,
-  ): Promise<Project>;
+  ): Promise<ProjectDto>;
 
   abstract deleteOne(
     findOneBody: UserProjectsServiceFindOneBody,

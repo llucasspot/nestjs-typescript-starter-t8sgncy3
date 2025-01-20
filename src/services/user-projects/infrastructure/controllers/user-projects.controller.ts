@@ -9,10 +9,8 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiMicroserviceAuth } from '../../../../shared/microservice-guard/decorators/api-microservice-auth.decorator';
-import {
-  CreateProjectDto,
-  UpdateProjectDto,
-} from '../../../project/domain/dtos/project.dto';
+import { CreateProjectDto } from '../../../project/domain/dtos/create-project.dto';
+import { UpdateProjectDto } from '../../../project/domain/dtos/update-project.dto';
 import { UserProjectsServicePort } from '../../domain/user-projects.service.port';
 
 @ApiMicroserviceAuth()

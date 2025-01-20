@@ -1,14 +1,18 @@
-import { Project } from './dtos/project.entity';
-import { CreateProjectDto, UpdateProjectDto } from './dtos/project.dto';
+import { CreateProjectDto } from './dtos/create-project.dto';
+import { ProjectDto } from './dtos/project.dto';
+import { UpdateProjectDto } from './dtos/update-project.dto';
 
 export abstract class ProjectServicePort {
-  abstract findAll(): Promise<Project[]>;
+  abstract findAll(projectIds?: string[]): Promise<ProjectDto[]>;
 
-  abstract createOne(body: CreateProjectDto): Promise<Project>;
+  abstract createOne(body: CreateProjectDto): Promise<ProjectDto>;
 
-  abstract findOneById(id: string): Promise<Project>;
+  abstract findOneById(projectId: string): Promise<ProjectDto>;
 
-  abstract updateOne(id: string, dto: UpdateProjectDto): Promise<Project>;
+  abstract updateOne(
+    projectId: string,
+    body: UpdateProjectDto,
+  ): Promise<ProjectDto>;
 
-  abstract deleteOne(id: string): Promise<void>;
+  abstract deleteOne(projectId: string): Promise<void>;
 }

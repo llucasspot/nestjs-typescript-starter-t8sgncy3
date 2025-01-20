@@ -8,14 +8,12 @@ import {
   Put,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ApiBearerAuth } from '../../../../shared/jwt-guard/decorators/api-bearer-auth.decorator';
-import {
-  CreateProjectDto,
-  UpdateProjectDto,
-} from '../../domain/dtos/project.dto';
+import { ApiMicroserviceAuth } from '../../../../shared/microservice-guard/decorators/api-microservice-auth.decorator';
+import { CreateProjectDto } from '../../domain/dtos/create-project.dto';
+import { UpdateProjectDto } from '../../domain/dtos/update-project.dto';
 import { ProjectServicePort } from '../../domain/project.service.port';
 
-@ApiBearerAuth()
+@ApiMicroserviceAuth()
 @ApiTags('projects')
 @Controller('/projects')
 export class ProjectController {

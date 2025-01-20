@@ -1,6 +1,10 @@
-export class CreateProjectDto {
-  constructor(
-    public readonly name: string,
-    public readonly description: string,
-  ) {}
-}
+import { PickType } from '@nestjs/swagger';
+import { ProjectDto } from './project.dto';
+
+export class CreateProjectDto extends PickType(ProjectDto, [
+  'name',
+  'shotDate',
+  'orderEndDate',
+  'messageForClients',
+  'schoolId',
+]) {}

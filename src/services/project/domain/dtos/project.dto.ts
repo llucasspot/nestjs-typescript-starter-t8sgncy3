@@ -1,24 +1,48 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsString, MinLength } from 'class-validator';
+import { OmitType, PickType } from '@nestjs/swagger';
+import { Expose, Transform, Type } from 'class-transformer';
+import { IsOptional } from 'class-validator';
+import { ProjectKlassDto } from '../../../klasses/domain/klass.dto';
+import { ProjectSchool } from '../../../schools/domain/school.dto';
+import { ProjectProductDto } from './project-product.dto';
+import { ProjectEntity } from '../../modules/local/domain/project.entity';
 
-export class CreateProjectDto {
-  @ApiProperty({ example: 'My Project', minLength: 3 })
-  @IsString()
-  @MinLength(3)
-  name: string;
+export class ProjectDto extends PickType(ProjectEntity, [
+  'id',
+  'name',
+  'shotDate',
+  'orderEndDate',
+  'messageForClients',
+  'state',
+  'schoolId',
+]) {
+  @Expose()
+  @IsOptional()
+  school?: ProjectSchool;
 
-  @ApiProperty({ example: 'This is my awesome project' })
-  @IsString()
-  description: string;
+  @Expose()
+  @Type(() => ProjectKlassDto)
+  @Transform(({ value }) => value ?? [])
+  klasses: ProjectKlassDto[] = [];
+
+  @Expose()
+  @Type(() => ProjectProductDto)
+  @Transform(({ value }) => value ?? [])
+  products: ProjectProductDto[] = [];
+
+  @Expose()
+  get klassIds(): string[] {
+    return this.klasses.map((klass) => klass.id);
+  }
+
+  @Expose()
+  get productIds(): string[] {
+    return this.products.map((product) => product.id);
+  }
 }
 
-export class UpdateProjectDto {
-  @ApiProperty({ example: 'My Updated Project', minLength: 3, required: false })
-  @IsString()
-  @MinLength(3)
-  name?: string;
+export class SchoolProject extends OmitType(ProjectDto, ['school']) {}
 
-  @ApiProperty({ example: 'Updated project description', required: false })
-  @IsString()
-  description?: string;
-}
+export class KlassProject extends OmitType(ProjectDto, [
+  'klasses',
+  'klassIds',
+]) {}

@@ -13,10 +13,8 @@ import {
   User,
   UserI,
 } from '../../../../shared/jwt-guard/decorators/user.decorator';
-import {
-  CreateProjectDto,
-  UpdateProjectDto,
-} from '../../../project/domain/dtos/project.dto';
+import { CreateProjectDto } from '../../../project/domain/dtos/create-project.dto';
+import { UpdateProjectDto } from '../../../project/domain/dtos/update-project.dto';
 import { UserProjectsServicePort } from '../../../user-projects/domain/user-projects.service.port';
 
 @ApiBearerAuth()
@@ -31,9 +29,9 @@ export class CurrentUserProjectsController {
     description: 'Project successfully created',
   })
   @Post()
-  createOne(@User() user: UserI, @Body() dto: CreateProjectDto) {
+  createOne(@User() user: UserI, @Body() body: CreateProjectDto) {
     const userId = user.id;
-    return this.userProjectsService.createOne({ userId }, dto);
+    return this.userProjectsService.createOne({ userId }, body);
   }
 
   @ApiOperation({ summary: 'Get all projects' })

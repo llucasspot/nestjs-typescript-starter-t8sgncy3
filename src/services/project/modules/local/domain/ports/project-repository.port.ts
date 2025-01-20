@@ -1,10 +1,17 @@
-import { CreateProjectDto } from '../../../../domain/dtos/project.dto';
-import { Project } from '../../../../domain/dtos/project.entity';
+import { CreateProjectEntityBody } from '../create-project-entity.body';
+import { ProjectEntity } from '../project.entity';
 
 export abstract class ProjectRepositoryPort {
-  abstract create(body: CreateProjectDto): Promise<Project>;
-  abstract findById(id: string): Promise<Project | null>;
-  abstract findAll(): Promise<Project[]>;
-  abstract update(id: string, project: Partial<Project>): Promise<Project>;
-  abstract delete(id: string): Promise<void>;
+  abstract create(body: CreateProjectEntityBody): Promise<ProjectEntity>;
+
+  abstract findById(projectId: string): Promise<ProjectEntity | null>;
+
+  abstract findAll(projectIds?: string[]): Promise<ProjectEntity[]>;
+
+  abstract update(
+    projectId: string,
+    body: Partial<ProjectEntity>,
+  ): Promise<ProjectEntity>;
+
+  abstract delete(projectId: string): Promise<void>;
 }

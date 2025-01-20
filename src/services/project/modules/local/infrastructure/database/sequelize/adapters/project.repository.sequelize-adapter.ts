@@ -1,9 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { plainToInstance } from 'class-transformer';
 import { SequelizeDatabaseService } from '../../../../../../../../shared/database/infrastructure/sequelize/sequelize.database.service';
-import { CreateProjectDto } from '../../../../../../domain/dtos/project.dto';
-import { Project as ProjectEntity } from '../../../../../../domain/dtos/project.entity';
+import { CreateProjectEntityBody } from '../../../../domain/create-project-entity.body';
 import { ProjectRepositoryPort } from '../../../../domain/ports/project-repository.port';
+import { ProjectEntity } from '../../../../domain/project.entity';
 import { ProjectSequelizeModel } from '../models/project.sequelize.model';
+import { SchoolSequelizeModel } from '../models/school.sequelize.model';
 
 @Injectable()
 export class ProjectRepositorySequelizeAdapter
@@ -12,50 +14,54 @@ export class ProjectRepositorySequelizeAdapter
   private readonly model = ProjectSequelizeModel;
 
   constructor(sequelizeDatabaseService: SequelizeDatabaseService) {
-    sequelizeDatabaseService.sequelize.addModels([this.model]);
+    sequelizeDatabaseService.addModel(this.model);
   }
 
-  async create(body: CreateProjectDto): Promise<ProjectEntity> {
-    const project = await this.model.create({
-      name: body.name,
-      description: body.description,
+  async create(body: CreateProjectEntityBody): Promise<ProjectEntity> {
+    const project = await this.model.create(body, {
+      include: [SchoolSequelizeModel],
     });
 
     return this.mapToEntity(project);
   }
 
-  async findById(id: string): Promise<ProjectEntity | null> {
-    const project = await this.model.findByPk(id);
+  async findById(projectId: string): Promise<ProjectEntity | null> {
+    const project = await this.model.findByPk(projectId, {
+      include: [SchoolSequelizeModel],
+    });
     return project ? this.mapToEntity(project) : null;
   }
 
-  async findAll(): Promise<ProjectEntity[]> {
-    const projects = await this.model.findAll();
+  async findAll(projectIds?: string[]): Promise<ProjectEntity[]> {
+    const projects = await this.model.findAll({
+      where: { id: projectIds },
+      include: [
+        {
+          model: SchoolSequelizeModel,
+        },
+      ],
+    });
     return projects.map(this.mapToEntity);
   }
 
   async update(
-    id: string,
-    projectEntity: Partial<ProjectEntity>,
+    projectId: string,
+    body: Partial<ProjectEntity>,
   ): Promise<ProjectEntity> {
-    const project = await this.model.findByPk(id);
+    const project = await this.model.findByPk(projectId, {
+      include: [SchoolSequelizeModel],
+    });
     if (!project) throw new NotFoundException('Project not found');
 
-    await project.update(projectEntity);
+    await project.update(body);
     return this.mapToEntity(project);
   }
 
-  async delete(id: string): Promise<void> {
-    await this.model.destroy({ where: { id } });
+  async delete(projectId: string): Promise<void> {
+    await this.model.destroy({ where: { id: projectId } });
   }
 
   private mapToEntity(model: ProjectSequelizeModel): ProjectEntity {
-    return new ProjectEntity(
-      model.id,
-      model.name,
-      model.description,
-      model.createdAt,
-      model.updatedAt,
-    );
+    return plainToInstance(ProjectEntity, model.toJSON());
   }
 }

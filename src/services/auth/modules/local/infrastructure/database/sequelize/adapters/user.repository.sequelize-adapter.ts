@@ -7,12 +7,14 @@ import { UserSequelizeModel } from '../models/user.sequelize.model';
 
 @Injectable()
 export class SequelizeUserRepository implements UserRepositoryPort {
+  private readonly model = UserSequelizeModel;
+
   constructor(sequelizeDatabaseService: SequelizeDatabaseService) {
-    sequelizeDatabaseService.sequelize.addModels([UserSequelizeModel]);
+    sequelizeDatabaseService.addModel(this.model);
   }
 
   async findById(id: string): Promise<User | null> {
-    const user = await UserSequelizeModel.findOne({ where: { id } });
+    const user = await this.model.findOne({ where: { id } });
     if (!user) return null;
     return new User(
       user.id,
@@ -24,7 +26,7 @@ export class SequelizeUserRepository implements UserRepositoryPort {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const user = await UserSequelizeModel.findOne({ where: { email } });
+    const user = await this.model.findOne({ where: { email } });
     if (!user) return null;
 
     return new User(
@@ -37,7 +39,7 @@ export class SequelizeUserRepository implements UserRepositoryPort {
   }
 
   async create(body: SignUpDto): Promise<User> {
-    const user = await UserSequelizeModel.create({
+    const user = await this.model.create({
       email: body.email,
       password: body.password,
     });
