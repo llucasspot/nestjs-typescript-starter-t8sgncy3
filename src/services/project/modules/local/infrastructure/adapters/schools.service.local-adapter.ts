@@ -1,8 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import { CreateSchoolDto } from '../../../../../schools/domain/create-school.dto';
+import { CreateSchoolBody } from '../../../../../schools/domain/create-school.body';
+import { GetSchoolBody } from '../../../../../schools/domain/get-school.body';
 import { SchoolDto } from '../../../../../schools/domain/school.dto';
-import { UpdateSchoolDto } from '../../../../../schools/domain/update-school.dto';
+import { UpdateSchoolBody } from '../../../../../schools/domain/update-school.body';
 import { SchoolsServicePort } from '../../../../domain/schools.service.port';
 import { ProjectEmitterPort } from '../../domain/ports/project.emitter.port';
 import { SchoolRepositoryPort } from '../../domain/ports/school-repository.port';
@@ -15,37 +16,37 @@ export class SchoolsServiceLocalAdapter implements SchoolsServicePort {
     private readonly projectEmitter: ProjectEmitterPort,
   ) {}
 
-  async findAll(schoolIds?: string[]): Promise<SchoolDto[]> {
-    const schoolEntity = await this.schoolRepository.findAll(schoolIds);
-    return schoolEntity.map(this.mapToDomain);
+  async findAll(body?: GetSchoolBody): Promise<SchoolDto[]> {
+    const entities = await this.schoolRepository.findAll(body);
+    return entities.map(this.mapToDomain);
   }
 
-  async createOne(body: CreateSchoolDto): Promise<SchoolDto> {
-    const schoolEntity = await this.schoolRepository.create(body);
-    return this.mapToDomain(schoolEntity);
+  async createOne(body: CreateSchoolBody): Promise<SchoolDto> {
+    const entity = await this.schoolRepository.create(body);
+    return this.mapToDomain(entity);
   }
 
   async findOneById(id: string): Promise<SchoolDto> {
-    const schoolEntity = await this.schoolRepository.findById(id);
-    if (!schoolEntity) {
+    const entity = await this.schoolRepository.findById(id);
+    if (!entity) {
       throw new NotFoundException('School not found');
     }
-    return this.mapToDomain(schoolEntity);
+    return this.mapToDomain(entity);
   }
 
-  async updateOne(id: string, body: UpdateSchoolDto): Promise<SchoolDto> {
+  async updateOne(id: string, body: UpdateSchoolBody): Promise<SchoolDto> {
     await this.findOneById(id);
-    const schoolEntity = await this.schoolRepository.update(id, body);
-    return this.mapToDomain(schoolEntity);
+    const entity = await this.schoolRepository.update(id, body);
+    return this.mapToDomain(entity);
   }
 
-  async deleteOne(schoolId: string): Promise<void> {
-    await this.findOneById(schoolId);
-    await this.schoolRepository.delete(schoolId);
-    await this.projectEmitter.emit('school deleted', { schoolId });
+  async deleteOne(id: string): Promise<void> {
+    await this.findOneById(id);
+    await this.schoolRepository.delete(id);
+    await this.projectEmitter.emit('school deleted', { id });
   }
 
-  private mapToDomain(schoolEntity: SchoolEntity): SchoolDto {
-    return plainToInstance(SchoolDto, schoolEntity);
+  private mapToDomain(entity: SchoolEntity): SchoolDto {
+    return plainToInstance(SchoolDto, entity);
   }
 }

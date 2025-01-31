@@ -1,18 +1,16 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Param } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiBearerAuth } from '../../../../shared/jwt-guard/decorators/api-bearer-auth.decorator';
 import {
   User,
   UserI,
 } from '../../../../shared/jwt-guard/decorators/user.decorator';
+import {
+  Delete,
+  Get,
+  Post,
+  Put,
+} from '../../../../shared/nest/http.decorators';
 import { CreateProjectKlassBody } from '../../../klasses/domain/dtos/create-klass.body';
 import { UpdateProjectKlassBody } from '../../../klasses/domain/dtos/update-klass.body';
 import { KlassesServicePort } from '../../../klasses/domain/klasses.service.port';

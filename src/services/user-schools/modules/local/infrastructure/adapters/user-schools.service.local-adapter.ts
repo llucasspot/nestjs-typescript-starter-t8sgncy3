@@ -1,8 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { SchoolsServicePort } from '../../../../../project/domain/schools.service.port';
-import { CreateSchoolDto } from '../../../../../schools/domain/create-school.dto';
+import { CreateSchoolBody } from '../../../../../schools/domain/create-school.body';
 import { SchoolDto } from '../../../../../schools/domain/school.dto';
-import { UpdateSchoolDto } from '../../../../../schools/domain/update-school.dto';
+import { UpdateSchoolBody } from '../../../../../schools/domain/update-school.body';
 import {
   UserSchoolsServiceFindAllBody,
   UserSchoolsServiceFindOneBody,
@@ -23,14 +23,14 @@ export class UserSchoolsServiceLocalAdapter implements UserSchoolsServicePort {
     const userSchools = await this.userSchoolsRepository.findAll({
       userId,
     });
-    return this.schoolsService.findAll(
-      userSchools.map(({ schoolId }) => schoolId),
-    );
+    return this.schoolsService.findAll({
+      id: userSchools.map(({ schoolId }) => schoolId),
+    });
   }
 
   async createOne(
     { userId }: UserSchoolsServiceFindAllBody,
-    body: CreateSchoolDto,
+    body: CreateSchoolBody,
   ): Promise<SchoolDto> {
     const school = await this.schoolsService.createOne(body);
     await this.userSchoolsRepository.create({
@@ -56,7 +56,7 @@ export class UserSchoolsServiceLocalAdapter implements UserSchoolsServicePort {
 
   async updateOne(
     { userId, schoolId }: UserSchoolsServiceFindOneBody,
-    body: UpdateSchoolDto,
+    body: UpdateSchoolBody,
   ): Promise<SchoolDto> {
     const userSchool = await this.userSchoolsRepository.findOne({
       userId,

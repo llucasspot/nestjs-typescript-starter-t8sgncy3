@@ -1,17 +1,20 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Param } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiMicroserviceAuth } from '../../../../shared/microservice-guard/decorators/api-microservice-auth.decorator';
-import { CreateSchoolDto } from '../../../schools/domain/create-school.dto';
-import { UpdateSchoolDto } from '../../../schools/domain/update-school.dto';
+import {
+  Delete,
+  Get,
+  Post,
+  Put,
+} from '../../../../shared/nest/http.decorators';
+import { CreateSchoolBody } from '../../../schools/domain/create-school.body';
+import { UpdateSchoolBody } from '../../../schools/domain/update-school.body';
 import { UserSchoolsServicePort } from '../../domain/user-schools.service.port';
+
+const NotFoundApiResponse = ApiResponse({
+  status: 404,
+  description: "User's school not found",
+});
 
 @ApiMicroserviceAuth()
 @ApiTags('user schools')
@@ -25,7 +28,7 @@ export class UserSchoolsController {
     description: "User's school successfully created",
   })
   @Post()
-  createOne(@Param('userId') userId: string, @Body() dto: CreateSchoolDto) {
+  createOne(@Param('userId') userId: string, @Body() dto: CreateSchoolBody) {
     return this.userSchoolsService.createOne({ userId }, dto);
   }
 
@@ -52,12 +55,12 @@ export class UserSchoolsController {
     status: 200,
     description: "User's school successfully updated",
   })
-  @ApiResponse({ status: 404, description: "User's school not found" })
+  @NotFoundApiResponse
   @Put(':schoolId')
   updateOne(
     @Param('userId') userId: string,
     @Param('schoolId') schoolId: string,
-    @Body() dto: UpdateSchoolDto,
+    @Body() dto: UpdateSchoolBody,
   ) {
     return this.userSchoolsService.updateOne({ userId, schoolId }, dto);
   }
@@ -67,7 +70,7 @@ export class UserSchoolsController {
     status: 200,
     description: "User's school successfully deleted",
   })
-  @ApiResponse({ status: 404, description: "User's school not found" })
+  @NotFoundApiResponse
   @Delete(':schoolId')
   deleteOne(
     @Param('userId') userId: string,

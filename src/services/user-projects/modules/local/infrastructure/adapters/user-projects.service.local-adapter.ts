@@ -25,9 +25,9 @@ export class UserProjectsServiceLocalAdapter
     const userProjects = await this.userProjectsRepository.findAll({
       userId,
     });
-    return this.projectServicePort.findAll(
-      userProjects.map(({ projectId }) => projectId),
-    );
+    return this.projectServicePort.findAll({
+      id: userProjects.map(({ projectId }) => projectId),
+    });
   }
 
   async createOne(

@@ -16,42 +16,39 @@ export class UserSchoolsRepositorySequelizeAdapter
   }
 
   async create({ userId, schoolId }: CreateUserSchoolDto): Promise<UserSchool> {
-    const school = await this.model.create({
+    const model = await this.model.create({
       userId,
       schoolId,
     });
-
-    return this.mapToEntity(school);
+    return this.mapToEntity(model);
   }
 
   async findOne(body: Partial<UserSchool>): Promise<UserSchool | null> {
-    const school = await this.model.findOne({
+    const model = await this.model.findOne({
       where: body,
     });
-    return this.mapToEntity(school);
+    return this.mapToEntity(model);
   }
 
   async findById(id: string): Promise<UserSchool | null> {
-    const school = await this.model.findByPk(id);
-    return this.mapToEntity(school);
+    const model = await this.model.findByPk(id);
+    return this.mapToEntity(model);
   }
 
   async findAll(body: Partial<UserSchool>): Promise<UserSchool[]> {
-    const schools = await this.model.findAll({
+    const models = await this.model.findAll({
       where: body,
     });
-    return schools.map((school) => this.mapToEntity(school));
+    return models.map((model) => this.mapToEntity(model));
   }
 
-  async update(
-    id: string,
-    schoolEntity: Partial<UserSchool>,
-  ): Promise<UserSchool> {
-    const school = await this.model.findByPk(id);
-    if (!school) throw new NotFoundException('School not found');
-
-    await school.update(schoolEntity);
-    return this.mapToEntity(school);
+  async update(id: string, body: Partial<UserSchool>): Promise<UserSchool> {
+    const model = await this.model.findByPk(id);
+    if (!model) {
+      throw new NotFoundException('School not found');
+    }
+    await model.update(body);
+    return this.mapToEntity(model);
   }
 
   async delete(id: string): Promise<void> {

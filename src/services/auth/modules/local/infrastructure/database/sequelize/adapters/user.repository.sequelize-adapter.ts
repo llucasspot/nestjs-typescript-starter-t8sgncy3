@@ -14,42 +14,40 @@ export class SequelizeUserRepository implements UserRepositoryPort {
   }
 
   async findById(id: string): Promise<User | null> {
-    const user = await this.model.findOne({ where: { id } });
-    if (!user) return null;
+    const model = await this.model.findOne({ where: { id } });
+    if (!model) return null;
     return new User(
-      user.id,
-      user.email,
-      user.password,
-      user.createdAt,
-      user.updatedAt,
+      model.id,
+      model.email,
+      model.password,
+      model.createdAt,
+      model.updatedAt,
     );
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    const user = await this.model.findOne({ where: { email } });
-    if (!user) return null;
-
+    const model = await this.model.findOne({ where: { email } });
+    if (!model) return null;
     return new User(
-      user.id,
-      user.email,
-      user.password,
-      user.createdAt,
-      user.updatedAt,
+      model.id,
+      model.email,
+      model.password,
+      model.createdAt,
+      model.updatedAt,
     );
   }
 
   async create(body: SignUpDto): Promise<User> {
-    const user = await this.model.create({
+    const model = await this.model.create({
       email: body.email,
       password: body.password,
     });
-
     return new User(
-      user.id,
-      user.email,
-      user.password,
-      user.createdAt,
-      user.updatedAt,
+      model.id,
+      model.email,
+      model.password,
+      model.createdAt,
+      model.updatedAt,
     );
   }
 }

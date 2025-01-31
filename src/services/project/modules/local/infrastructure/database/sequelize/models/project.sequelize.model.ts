@@ -9,7 +9,7 @@ import {
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
-import { CreateProjectEntityBody } from '../../../../domain/create-project-entity.body';
+import { CreateProjectEntityBody } from '../../../../domain/ports/project-repository.port';
 import { ProjectEntity, ProjectState } from '../../../../domain/project.entity';
 import { SchoolSequelizeModel } from './school.sequelize.model';
 

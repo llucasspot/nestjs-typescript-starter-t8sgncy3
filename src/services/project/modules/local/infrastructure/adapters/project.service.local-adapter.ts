@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { CreateProjectDto } from '../../../../domain/dtos/create-project.dto';
+import { GetProjectBody } from '../../../../domain/dtos/get-project.body';
 import { ProjectDto } from '../../../../domain/dtos/project.dto';
 import { UpdateProjectDto } from '../../../../domain/dtos/update-project.dto';
 import { ProjectServicePort } from '../../../../domain/project.service.port';
@@ -15,38 +16,37 @@ export class ProjectServiceLocalAdapter implements ProjectServicePort {
     private readonly projectEmitterPort: ProjectEmitterPort,
   ) {}
 
-  async findAll(projectIds?: string[]): Promise<ProjectDto[]> {
-    const projectEntities = await this.projectRepository.findAll(projectIds);
-    console.log(projectEntities);
-    return projectEntities.map(this.mapToDomain);
+  async findAll(body?: GetProjectBody): Promise<ProjectDto[]> {
+    const entities = await this.projectRepository.findAll(body);
+    return entities.map(this.mapToDomain);
   }
 
   async createOne(body: CreateProjectDto): Promise<ProjectDto> {
-    const projectEntity = await this.projectRepository.create(body);
-    return this.mapToDomain(projectEntity);
+    const entity = await this.projectRepository.create(body);
+    return this.mapToDomain(entity);
   }
 
   async findOneById(id: string): Promise<ProjectDto> {
-    const projectEntity = await this.projectRepository.findById(id);
-    if (!projectEntity) {
+    const entity = await this.projectRepository.findById(id);
+    if (!entity) {
       throw new NotFoundException('Project not found');
     }
-    return this.mapToDomain(projectEntity);
+    return this.mapToDomain(entity);
   }
 
   async updateOne(id: string, body: UpdateProjectDto): Promise<ProjectDto> {
     await this.findOneById(id);
-    const projectEntity = await this.projectRepository.update(id, body);
-    return this.mapToDomain(projectEntity);
+    const entity = await this.projectRepository.update(id, body);
+    return this.mapToDomain(entity);
   }
 
-  async deleteOne(projectId: string): Promise<void> {
-    await this.findOneById(projectId);
-    await this.projectRepository.delete(projectId);
-    await this.projectEmitterPort.emit('project deleted', { projectId });
+  async deleteOne(id: string): Promise<void> {
+    await this.findOneById(id);
+    await this.projectRepository.delete(id);
+    await this.projectEmitterPort.emit('project deleted', { id });
   }
 
-  private mapToDomain(projectEntity: ProjectEntity): ProjectDto {
-    return plainToInstance(ProjectDto, projectEntity);
+  private mapToDomain(entity: ProjectEntity): ProjectDto {
+    return plainToInstance(ProjectDto, entity);
   }
 }

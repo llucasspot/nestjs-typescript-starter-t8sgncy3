@@ -19,42 +19,42 @@ export class UserProjectsRepositorySequelizeAdapter
     userId,
     projectId,
   }: CreateUserProjectDto): Promise<UserProject> {
-    const project = await this.model.create({
+    const model = await this.model.create({
       userId,
       projectId,
     });
-
-    return this.mapToEntity(project);
+    return this.mapToEntity(model);
   }
 
   async findOne(body: Partial<UserProject>): Promise<UserProject | null> {
-    const project = await this.model.findOne({
+    const model = await this.model.findOne({
       where: body,
     });
-    return this.mapToEntity(project);
+    return this.mapToEntity(model);
   }
 
   async findById(id: string): Promise<UserProject | null> {
-    const project = await this.model.findByPk(id);
-    return this.mapToEntity(project);
+    const model = await this.model.findByPk(id);
+    return this.mapToEntity(model);
   }
 
   async findAll(body: Partial<UserProject>): Promise<UserProject[]> {
-    const projects = await this.model.findAll({
+    const models = await this.model.findAll({
       where: body,
     });
-    return projects.map((project) => this.mapToEntity(project));
+    return models.map((model) => this.mapToEntity(model));
   }
 
   async update(
     id: string,
     projectEntity: Partial<UserProject>,
   ): Promise<UserProject> {
-    const project = await this.model.findByPk(id);
-    if (!project) throw new NotFoundException('Project not found');
-
-    await project.update(projectEntity);
-    return this.mapToEntity(project);
+    const model = await this.model.findByPk(id);
+    if (!model) {
+      throw new NotFoundException('Project not found');
+    }
+    await model.update(projectEntity);
+    return this.mapToEntity(model);
   }
 
   async delete(id: string): Promise<void> {

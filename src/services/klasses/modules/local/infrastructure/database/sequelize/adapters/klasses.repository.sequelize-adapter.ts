@@ -39,8 +39,9 @@ export class KlassesRepositorySequelizeAdapter
 
   async update(id: string, body: UpdateKlassEntityBody): Promise<KlassEntity> {
     const model = await this.model.findByPk(id);
-    if (!model) throw new NotFoundException('Klass not found');
-
+    if (!model) {
+      throw new NotFoundException('Klass not found');
+    }
     await model.update(body);
     return this.mapToEntity(model);
   }

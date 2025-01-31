@@ -1,8 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { SequelizeDatabaseService } from '../../../../../../../../shared/database/infrastructure/sequelize/sequelize.database.service';
-import { CreateSchoolEntityBody } from '../../../../domain/create-school-entity.body';
-import { SchoolRepositoryPort } from '../../../../domain/ports/school-repository.port';
+import {
+  CreateSchoolEntityBody,
+  GetSchoolEntityBody,
+  SchoolRepositoryPort,
+  UpdateSchoolEntityBody,
+} from '../../../../domain/ports/school-repository.port';
 import { SchoolEntity } from '../../../../domain/school.entity';
 import { SchoolSequelizeModel } from '../models/school.sequelize.model';
 
@@ -15,34 +19,34 @@ export class SchoolRepositorySequelizeAdapter implements SchoolRepositoryPort {
   }
 
   async create(body: CreateSchoolEntityBody): Promise<SchoolEntity> {
-    const school = await this.model.create(body);
-
-    return this.mapToEntity(school);
+    const model = await this.model.create(body);
+    return this.mapToEntity(model);
   }
 
-  async findById(schoolId: string): Promise<SchoolEntity | null> {
-    const school = await this.model.findByPk(schoolId);
-    return school ? this.mapToEntity(school) : null;
+  async findById(id: string): Promise<SchoolEntity | null> {
+    const model = await this.model.findByPk(id);
+    return model ? this.mapToEntity(model) : null;
   }
 
-  async findAll(schoolIdq?: string[]): Promise<SchoolEntity[]> {
-    const schools = await this.model.findAll({ where: { id: schoolIdq } });
-    return schools.map(this.mapToEntity);
+  async findAll(body?: GetSchoolEntityBody): Promise<SchoolEntity[]> {
+    const models = await this.model.findAll({ where: body });
+    return models.map(this.mapToEntity);
   }
 
   async update(
-    schoolId: string,
-    body: Partial<SchoolEntity>,
+    id: string,
+    body: UpdateSchoolEntityBody,
   ): Promise<SchoolEntity> {
-    const school = await this.model.findByPk(schoolId);
-    if (!school) throw new NotFoundException('School not found');
-
-    await school.update(body);
-    return this.mapToEntity(school);
+    const model = await this.model.findByPk(id);
+    if (!model) {
+      throw new NotFoundException('School not found');
+    }
+    await model.update(body);
+    return this.mapToEntity(model);
   }
 
-  async delete(schoolId: string): Promise<void> {
-    await this.model.destroy({ where: { id: schoolId } });
+  async delete(id: string): Promise<void> {
+    await this.model.destroy({ where: { id } });
   }
 
   private mapToEntity(model: SchoolSequelizeModel): SchoolEntity {

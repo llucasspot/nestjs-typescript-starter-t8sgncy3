@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
 import { CreateKlassBody } from '../../../../domain/dtos/create-klass.body';
-import { GetCreateKlassBody } from '../../../../domain/dtos/get-klass.body';
+import { GetKlassBody } from '../../../../domain/dtos/get-klass.body';
 import { KlassDto } from '../../../../domain/dtos/klass.dto';
 import { UpdateKlassBody } from '../../../../domain/dtos/update-klass.body';
 import { KlassesServicePort } from '../../../../domain/klasses.service.port';
@@ -12,28 +12,28 @@ import { KlassesRepositoryPort } from '../../domain/ports/klasses-repository.por
 export class KlassesServiceLocalAdapter implements KlassesServicePort {
   constructor(private readonly klassesRepository: KlassesRepositoryPort) {}
 
-  async findAll(body?: GetCreateKlassBody): Promise<KlassDto[]> {
-    const projectEntities = await this.klassesRepository.findAll(body);
-    return projectEntities.map(this.mapToDomain);
+  async findAll(body?: GetKlassBody): Promise<KlassDto[]> {
+    const entities = await this.klassesRepository.findAll(body);
+    return entities.map(this.mapToDomain);
   }
 
   async createOne(body: CreateKlassBody): Promise<KlassDto> {
-    const projectEntity = await this.klassesRepository.create(body);
-    return this.mapToDomain(projectEntity);
+    const entity = await this.klassesRepository.create(body);
+    return this.mapToDomain(entity);
   }
 
   async findOneById(id: string): Promise<KlassDto> {
-    const projectEntity = await this.klassesRepository.findById(id);
-    if (!projectEntity) {
+    const entity = await this.klassesRepository.findById(id);
+    if (!entity) {
       throw new NotFoundException('Klass not found');
     }
-    return this.mapToDomain(projectEntity);
+    return this.mapToDomain(entity);
   }
 
   async updateOne(id: string, body: UpdateKlassBody): Promise<KlassDto> {
     await this.findOneById(id);
-    const projectEntity = await this.klassesRepository.update(id, body);
-    return this.mapToDomain(projectEntity);
+    const entity = await this.klassesRepository.update(id, body);
+    return this.mapToDomain(entity);
   }
 
   async deleteOne(id: string): Promise<void> {

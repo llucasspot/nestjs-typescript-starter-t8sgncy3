@@ -1,21 +1,24 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Param } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiBearerAuth } from '../../../../shared/jwt-guard/decorators/api-bearer-auth.decorator';
 import {
   User,
   UserI,
 } from '../../../../shared/jwt-guard/decorators/user.decorator';
-import { CreateSchoolDto } from '../../../schools/domain/create-school.dto';
-import { UpdateSchoolDto } from '../../../schools/domain/update-school.dto';
+import {
+  Delete,
+  Get,
+  Post,
+  Put,
+} from '../../../../shared/nest/http.decorators';
+import { CreateSchoolBody } from '../../../schools/domain/create-school.body';
+import { UpdateSchoolBody } from '../../../schools/domain/update-school.body';
 import { UserSchoolsServicePort } from '../../../user-schools/domain/user-schools.service.port';
+
+const NotFoundApiResponse = ApiResponse({
+  status: 404,
+  description: 'School not found',
+});
 
 @ApiBearerAuth()
 @ApiTags('your schools')
@@ -29,7 +32,7 @@ export class CurrentUserSchoolsController {
     description: 'School successfully created',
   })
   @Post()
-  createOne(@User() user: UserI, @Body() body: CreateSchoolDto) {
+  createOne(@User() user: UserI, @Body() body: CreateSchoolBody) {
     const userId = user.id;
     return this.userSchoolsService.createOne({ userId }, body);
   }
@@ -44,7 +47,7 @@ export class CurrentUserSchoolsController {
 
   @ApiOperation({ summary: 'Get a school by id' })
   @ApiResponse({ status: 200, description: 'Return the school' })
-  @ApiResponse({ status: 404, description: 'School not found' })
+  @NotFoundApiResponse
   @Get(':schoolId')
   findOneById(@User() user: UserI, @Param('schoolId') schoolId: string) {
     const userId = user.id;
@@ -56,12 +59,12 @@ export class CurrentUserSchoolsController {
     status: 200,
     description: "User's school successfully updated",
   })
-  @ApiResponse({ status: 404, description: 'School not found' })
+  @NotFoundApiResponse
   @Put(':schoolId')
   updateOne(
     @User() user: UserI,
     @Param('schoolId') schoolId: string,
-    @Body() dto: UpdateSchoolDto,
+    @Body() dto: UpdateSchoolBody,
   ) {
     const userId = user.id;
     return this.userSchoolsService.updateOne({ userId, schoolId }, dto);
@@ -72,7 +75,7 @@ export class CurrentUserSchoolsController {
     status: 200,
     description: 'School successfully deleted',
   })
-  @ApiResponse({ status: 404, description: 'School not found' })
+  @NotFoundApiResponse
   @Delete(':schoolId')
   deleteOne(@User() user: UserI, @Param('schoolId') schoolId: string) {
     const userId = user.id;

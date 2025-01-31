@@ -1,8 +1,8 @@
-import { OmitType } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 import { IsOptional } from 'class-validator';
+import { AvailableCurrency } from '../../project/modules/local/domain/school.entity';
 
-export class GetKlassBody {
+export class GetSchoolBody {
   @Expose()
   @IsOptional()
   id?: string | string[];
@@ -13,9 +13,9 @@ export class GetKlassBody {
 
   @Expose()
   @IsOptional()
-  projectId?: string | string[];
-}
+  currency?: AvailableCurrency | AvailableCurrency[];
 
-export class GetProjectKlassBody extends OmitType(GetKlassBody, [
-  'projectId',
-]) {}
+  @Expose()
+  @IsOptional()
+  city?: string | string[];
+}

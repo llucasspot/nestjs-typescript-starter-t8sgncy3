@@ -1,17 +1,20 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Param } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiMicroserviceAuth } from '../../../../shared/microservice-guard/decorators/api-microservice-auth.decorator';
+import {
+  Delete,
+  Get,
+  Post,
+  Put,
+} from '../../../../shared/nest/http.decorators';
 import { CreateProjectDto } from '../../../project/domain/dtos/create-project.dto';
 import { UpdateProjectDto } from '../../../project/domain/dtos/update-project.dto';
 import { UserProjectsServicePort } from '../../domain/user-projects.service.port';
+
+const NotFoundApiResponse = ApiResponse({
+  status: 404,
+  description: "User's project not found",
+});
 
 @ApiMicroserviceAuth()
 @ApiTags('user projects')
@@ -38,7 +41,7 @@ export class UserProjectsController {
 
   @ApiOperation({ summary: "Get a user's project by id" })
   @ApiResponse({ status: 200, description: "Return the user's project" })
-  @ApiResponse({ status: 404, description: "User's project not found" })
+  @NotFoundApiResponse
   @Get(':projectId')
   findOneById(
     @Param('userId') userId: string,
@@ -52,7 +55,7 @@ export class UserProjectsController {
     status: 200,
     description: "User's project successfully updated",
   })
-  @ApiResponse({ status: 404, description: "User's project not found" })
+  @NotFoundApiResponse
   @Put(':projectId')
   updateOne(
     @Param('userId') userId: string,
@@ -67,7 +70,7 @@ export class UserProjectsController {
     status: 200,
     description: "User's project successfully deleted",
   })
-  @ApiResponse({ status: 404, description: "User's project not found" })
+  @NotFoundApiResponse
   @Delete(':projectId')
   deleteOne(
     @Param('userId') userId: string,

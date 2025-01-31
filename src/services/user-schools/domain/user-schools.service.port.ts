@@ -1,6 +1,6 @@
-import { CreateSchoolDto } from '../../schools/domain/create-school.dto';
+import { CreateSchoolBody } from '../../schools/domain/create-school.body';
 import { SchoolDto } from '../../schools/domain/school.dto';
-import { UpdateSchoolDto } from '../../schools/domain/update-school.dto';
+import { UpdateSchoolBody } from '../../schools/domain/update-school.body';
 
 export type UserSchoolsServiceFindAllBody = {
   userId: string;
@@ -18,7 +18,7 @@ export abstract class UserSchoolsServicePort {
 
   abstract createOne(
     findAllBody: UserSchoolsServiceFindAllBody,
-    body: CreateSchoolDto,
+    body: CreateSchoolBody,
   ): Promise<SchoolDto>;
 
   abstract findOneById(
@@ -27,7 +27,7 @@ export abstract class UserSchoolsServicePort {
 
   abstract updateOne(
     findOneBody: UserSchoolsServiceFindOneBody,
-    body: UpdateSchoolDto,
+    body: UpdateSchoolBody,
   ): Promise<SchoolDto>;
 
   abstract deleteOne(findOneBody: UserSchoolsServiceFindOneBody): Promise<void>;

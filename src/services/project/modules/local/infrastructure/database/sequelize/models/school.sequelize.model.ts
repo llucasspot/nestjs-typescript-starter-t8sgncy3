@@ -8,7 +8,7 @@ import {
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
-import { CreateSchoolEntityBody } from '../../../../domain/create-school-entity.body';
+import { CreateSchoolEntityBody } from '../../../../domain/ports/school-repository.port';
 import {
   AvailableCurrency,
   SchoolEntity,

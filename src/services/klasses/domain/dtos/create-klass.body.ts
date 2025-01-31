@@ -1,16 +1,10 @@
-import { OmitType } from '@nestjs/swagger';
-import { Expose } from 'class-transformer';
-import { IsString } from 'class-validator';
+import { OmitType, PickType } from '@nestjs/swagger';
+import { KlassEntity } from '../../modules/local/domain/klass.entity';
 
-export class CreateKlassBody {
-  @Expose()
-  @IsString()
-  name: string;
-
-  @Expose()
-  @IsString()
-  projectId: string;
-}
+export class CreateKlassBody extends PickType(KlassEntity, [
+  'name',
+  'projectId',
+]) {}
 
 export class CreateProjectKlassBody extends OmitType(CreateKlassBody, [
   'projectId',

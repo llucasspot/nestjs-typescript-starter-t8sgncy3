@@ -1,13 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsString, MinLength } from 'class-validator';
+import { IntersectionType, PartialType, PickType } from '@nestjs/swagger';
+import { ProjectEntity } from '../../modules/local/domain/project.entity';
+import { CreateProjectDto } from './create-project.dto';
 
-export class UpdateProjectDto {
-  @ApiProperty({ example: 'My Updated Project', minLength: 3, required: false })
-  @IsString()
-  @MinLength(3)
-  name?: string;
-
-  @ApiProperty({ example: 'Updated project description', required: false })
-  @IsString()
-  description?: string;
-}
+export class UpdateProjectDto extends PartialType(
+  IntersectionType(CreateProjectDto, PickType(ProjectEntity, ['state'])),
+) {}

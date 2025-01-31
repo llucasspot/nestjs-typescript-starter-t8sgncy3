@@ -1,5 +1,5 @@
 import { Expose, Type } from 'class-transformer';
-import { IsOptional } from 'class-validator';
+import { IsDate, IsEnum, IsOptional, IsString } from 'class-validator';
 import { SchoolEntity } from './school.entity';
 
 export enum ProjectState {
@@ -9,20 +9,32 @@ export enum ProjectState {
 
 export class ProjectEntity {
   @Expose()
+  @IsString()
   id!: string;
+
   @Expose()
+  @IsString()
   name!: string;
+
   @Expose()
+  @IsDate()
   shotDate!: Date;
+
   @Expose()
+  @IsDate()
   orderEndDate!: Date;
+
   @Expose()
+  @IsString()
   @IsOptional()
   messageForClients?: string;
+
   @Expose()
+  @IsEnum(ProjectState)
   state!: ProjectState;
 
   @Expose()
+  @IsString()
   schoolId!: string;
 
   @Expose()

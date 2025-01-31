@@ -1,17 +1,20 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Param } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiMicroserviceAuth } from '../../../../shared/microservice-guard/decorators/api-microservice-auth.decorator';
-import { CreateSchoolDto } from '../../../schools/domain/create-school.dto';
-import { UpdateSchoolDto } from '../../../schools/domain/update-school.dto';
+import {
+  Delete,
+  Get,
+  Post,
+  Put,
+} from '../../../../shared/nest/http.decorators';
+import { CreateSchoolBody } from '../../../schools/domain/create-school.body';
+import { UpdateSchoolBody } from '../../../schools/domain/update-school.body';
 import { SchoolsServicePort } from '../../domain/schools.service.port';
+
+const NotFoundApiResponse = ApiResponse({
+  status: 404,
+  description: 'School not found',
+});
 
 @ApiMicroserviceAuth()
 @ApiTags('schools')
@@ -22,7 +25,7 @@ export class SchoolsController {
   @ApiOperation({ summary: 'Create a new school' })
   @ApiResponse({ status: 201, description: 'School successfully created' })
   @Post()
-  createOne(@Body() body: CreateSchoolDto) {
+  createOne(@Body() body: CreateSchoolBody) {
     return this.schoolsService.createOne(body);
   }
 
@@ -43,15 +46,15 @@ export class SchoolsController {
 
   @ApiOperation({ summary: 'Update a school' })
   @ApiResponse({ status: 200, description: 'School successfully updated' })
-  @ApiResponse({ status: 404, description: 'School not found' })
+  @NotFoundApiResponse
   @Put(':id')
-  updateOne(@Param('id') id: string, @Body() body: UpdateSchoolDto) {
+  updateOne(@Param('id') id: string, @Body() body: UpdateSchoolBody) {
     return this.schoolsService.updateOne(id, body);
   }
 
   @ApiOperation({ summary: 'Delete a school' })
   @ApiResponse({ status: 200, description: 'School successfully deleted' })
-  @ApiResponse({ status: 404, description: 'School not found' })
+  @NotFoundApiResponse
   @Delete(':id')
   deleteOne(@Param('id') id: string) {
     return this.schoolsService.deleteOne(id);

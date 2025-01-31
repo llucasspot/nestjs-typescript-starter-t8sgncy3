@@ -1,17 +1,20 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Body, Controller, Param } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiMicroserviceAuth } from '../../../../shared/microservice-guard/decorators/api-microservice-auth.decorator';
+import {
+  Delete,
+  Get,
+  Post,
+  Put,
+} from '../../../../shared/nest/http.decorators';
 import { CreateKlassBody } from '../../domain/dtos/create-klass.body';
 import { UpdateKlassBody } from '../../domain/dtos/update-klass.body';
 import { KlassesServicePort } from '../../domain/klasses.service.port';
+
+const NotFoundApiResponse = ApiResponse({
+  status: 404,
+  description: 'Klass not found',
+});
 
 @ApiMicroserviceAuth()
 @ApiTags('klasses')
@@ -35,7 +38,7 @@ export class KlassesController {
 
   @ApiOperation({ summary: 'Get a klass by id' })
   @ApiResponse({ status: 200, description: 'Return the klass' })
-  @ApiResponse({ status: 404, description: 'Klass not found' })
+  @NotFoundApiResponse
   @Get(':id')
   findOneById(@Param('id') id: string) {
     return this.klassesService.findOneById(id);
@@ -43,7 +46,7 @@ export class KlassesController {
 
   @ApiOperation({ summary: 'Update a klass' })
   @ApiResponse({ status: 200, description: 'Klass successfully updated' })
-  @ApiResponse({ status: 404, description: 'Klass not found' })
+  @NotFoundApiResponse
   @Put(':id')
   updateOne(@Param('id') id: string, @Body() body: UpdateKlassBody) {
     return this.klassesService.updateOne(id, body);
@@ -51,7 +54,7 @@ export class KlassesController {
 
   @ApiOperation({ summary: 'Delete a klass' })
   @ApiResponse({ status: 200, description: 'Klass successfully deleted' })
-  @ApiResponse({ status: 404, description: 'Klass not found' })
+  @NotFoundApiResponse
   @Delete(':id')
   deleteOne(@Param('id') id: string) {
     return this.klassesService.deleteOne(id);

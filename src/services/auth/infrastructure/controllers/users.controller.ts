@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Param } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiMicroserviceAuth } from '../../../../shared/microservice-guard/decorators/api-microservice-auth.decorator';
+import { Get, Post } from '../../../../shared/nest/http.decorators';
 import { CreateUserBody } from '../../domain/user-service/dtos/create-user.body';
 import { UserServicePort } from '../../domain/user-service/user.service.port';
 
