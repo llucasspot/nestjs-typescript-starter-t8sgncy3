@@ -1,7 +1,7 @@
 import { OmitType, PickType } from '@nestjs/swagger';
 import { Expose, Transform, Type } from 'class-transformer';
 import { IsOptional } from 'class-validator';
-import { ProjectKlassDto } from '../../../klasses/domain/klass.dto';
+import { ProjectKlassDto } from '../../../klasses/domain/dtos/klass.dto';
 import { ProjectSchool } from '../../../schools/domain/school.dto';
 import { ProjectProductDto } from './project-product.dto';
 import { ProjectEntity } from '../../modules/local/domain/project.entity';

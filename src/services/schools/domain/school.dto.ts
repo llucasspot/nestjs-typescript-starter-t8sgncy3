@@ -1,5 +1,5 @@
 import { OmitType } from '@nestjs/swagger';
-import { Expose } from 'class-transformer';
+import { Expose, Transform } from 'class-transformer';
 import { SchoolProject } from '../../project/domain/dtos/project.dto';
 
 export enum AvailableCurrency {
@@ -16,6 +16,7 @@ export class SchoolDto {
   @Expose()
   city!: string;
   @Expose()
+  @Transform(({ value }) => value ?? [])
   projects: SchoolProject[] = [];
 
   get projectIds(): string[] {
